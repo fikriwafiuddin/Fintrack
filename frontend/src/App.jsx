@@ -5,15 +5,29 @@ import Income from "./pages/Income"
 import Budgeting from "./pages/Budgeting"
 import Profile from "./pages/Profile"
 import Expenses from "./pages/Expenses"
-import { Provider } from "react-redux"
-import store from "./store/store"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
+import useMessage from "./hooks/useMessage"
+import { ToastContainer } from "react-toastify"
 
 function App() {
+  useMessage()
+
   return (
-    <Provider store={store}>
+    <>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover={false}
+        theme="colored"
+      />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -61,7 +75,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </Provider>
+    </>
   )
 }
 
