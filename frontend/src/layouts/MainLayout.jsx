@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, Outlet, useLocation } from "react-router-dom"
 import { LuLayoutDashboard } from "react-icons/lu"
 import {
   FaUserCircle,
@@ -36,7 +36,7 @@ const links = [
   },
 ]
 
-function MainLayout({ children }) {
+function MainLayout() {
   const [openSidebar, setOpenSidebar] = useState(false)
   const location = useLocation()
 
@@ -106,7 +106,9 @@ function MainLayout({ children }) {
           </svg>
         </header>
         <main className="p-4">
-          <div>{children}</div>
+          <div>
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

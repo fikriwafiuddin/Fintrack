@@ -11,8 +11,11 @@ function useMessage() {
     if (authMsg.success) {
       toast.success(authMsg.success)
       dispatch(authClearMessage())
+    } else if (authMsg.error) {
+      toast.error(authMsg.error)
+      dispatch(authClearMessage())
     }
-  }, [authMsg, dispatch])
+  }, [authMsg.success, authMsg.error, dispatch])
 }
 
 export default useMessage

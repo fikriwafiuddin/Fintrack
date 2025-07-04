@@ -1,17 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Dashboard from "./pages/Dashboard"
-import MainLayout from "./layouts/MainLayout"
-import Income from "./pages/Income"
-import Budgeting from "./pages/Budgeting"
-import Profile from "./pages/Profile"
-import Expenses from "./pages/Expenses"
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import Register from "./pages/Register"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import useMessage from "./hooks/useMessage"
 import { ToastContainer } from "react-toastify"
+import guestRoute from "./routes/guest-route"
+import privateRoute from "./routes/private-route"
+import publiRoute from "./routes/public-route"
 
 function App() {
+  const router = createBrowserRouter([guestRoute, privateRoute, publiRoute])
+
   useMessage()
 
   return (
@@ -28,53 +24,7 @@ function App() {
         pauseOnHover={false}
         theme="colored"
       />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/dashboard"
-            element={
-              <MainLayout>
-                <Dashboard />
-              </MainLayout>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/income"
-            element={
-              <MainLayout>
-                <Income />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/expenses"
-            element={
-              <MainLayout>
-                <Expenses />
-              </MainLayout>
-            }
-          />
-          {/* <Route
-            path="/budgeting"
-            element={
-              <MainLayout>
-                <Budgeting />
-              </MainLayout>
-            }
-          /> */}
-          <Route
-            path="/profile"
-            element={
-              <MainLayout>
-                <Profile />
-              </MainLayout>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </>
   )
 }
