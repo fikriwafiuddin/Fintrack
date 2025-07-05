@@ -14,6 +14,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  balance: {
+    type: Number,
+    default: 0,
+  },
+  totalIncome: {
+    type: Number,
+    default: 0,
+  },
+  totalExpense: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const User = mongoose.model("User", userSchema)
