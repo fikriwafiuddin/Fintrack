@@ -21,7 +21,7 @@ const register = async (request) => {
 
   const user = await User.create({ username, email, password: hashedPassword })
 
-  const token = generateToken({ id: user._id })
+  const token = generateToken(user._id)
   return {
     token,
     user: {
@@ -47,7 +47,7 @@ const login = async (request) => {
     throw new ResponseError("Email or password wrong", 401)
   }
 
-  const token = generateToken({ id: user._id })
+  const token = generateToken(user._id)
   return {
     token,
     user: {
