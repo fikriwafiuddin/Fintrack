@@ -5,7 +5,7 @@ const register = async (req, res, next) => {
     const result = await userService.register(req.body)
 
     res.cookie("token", result.token, {
-      httpOnly: true,
+      httpOnly: process.env.NODE_ENV === "production",
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000 * 7,
       sameSite: "strict",
@@ -24,7 +24,7 @@ const login = async (req, res, next) => {
     const result = await userService.login(req.body)
 
     res.cookie("token", result.token, {
-      httpOnly: true,
+      httpOnly: process.env.NODE_ENV === "production",
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000 * 7,
       sameSite: "strict",
