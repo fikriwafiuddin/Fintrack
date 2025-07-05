@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import authValidation from "../validations/auth-validation"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
+import { register as registerUser } from "../store/thunk/auth-thunk"
 
 function Register() {
   const {
@@ -18,7 +19,7 @@ function Register() {
   const dispatch = useDispatch()
 
   const onSubmit = async (data) => {
-    dispatch(register(data))
+    dispatch(registerUser(data))
       .unwrap()
       .catch((backendErrors) => {
         for (const key in backendErrors?.errors) {
@@ -35,6 +36,7 @@ function Register() {
           <div>
             <label htmlFor="email">Email:</label>
             <input
+              {...register("email")}
               id="email"
               name="email"
               type="email"
@@ -49,6 +51,7 @@ function Register() {
           <div>
             <label htmlFor="username">Username:</label>
             <input
+              {...register("username")}
               id="username"
               name="username"
               type="text"
@@ -63,6 +66,7 @@ function Register() {
           <div>
             <label htmlFor="password">Password:</label>
             <input
+              {...register("password")}
               id="password"
               name="password"
               type="password"
@@ -77,6 +81,7 @@ function Register() {
           <div>
             <label htmlFor="confirmPassword">Confirm Password:</label>
             <input
+              {...register("confirmPassword")}
               id="confirmPasswor"
               name="confirmPassword"
               type="password"
@@ -100,7 +105,7 @@ function Register() {
         </form>
         <p className="mt-4 text-center text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
+          <Link to="/auth/login" className="text-blue-500 hover:underline">
             Login
           </Link>
         </p>
