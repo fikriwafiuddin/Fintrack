@@ -1,19 +1,30 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import BarChart from "../components/BarChart"
 import PieChart from "../components/PieChart"
 import { FaArrowUp } from "react-icons/fa"
 import CategoryCard from "../components/CategoryCard"
 import Table from "../components/Table"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { configTableIncome, tabs } from "../config/income-config"
 import ToggleTab from "../components/ToggleTab"
+import FormCategory from "../components/FormCategory"
+import { getCategories } from "../store/thunk/category-thunk"
 
 function Income() {
   const [openForm, setOpenForm] = useState(false)
+  const [openFormCategory, setOpenFormCategory] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null)
   const [tab, setTab] = useState("category")
-  const { transactions, categories, barData, pieData } = useSelector(
+  const { transactions, barData, pieData } = useSelector(
     (state) => state.income
   )
+  const { categories, isLoadingGet } = useSelector((state) => state.category)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getCategories("income"))
+  }, [dispatch])
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
@@ -54,16 +65,31 @@ function Income() {
               <button
                 type="button"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
-                onClick={() => setOpenForm(true)}
+                onClick={() => setOpenFormCategory(true)}
               >
                 + Add Category
               </button>
             </div>
             <div className="bg-white shadow rounded-xl mt-4 p-4">
               <h3 className="text-lg font-medium">List Category</h3>
+              {isLoadingGet && (
+                <h4 className="text-center text-xl text-slate-700 font-semibold mt-4">
+                  Loading
+                </h4>
+              )}
+              {!isLoadingGet && categories.length === 0 && (
+                <h4 className="text-center text-xl text-slate-700 font-semibold mt-4">
+                  No Category Found
+                </h4>
+              )}
               <div className="grid md:grid-cols-3">
                 {categories.map((category) => (
-                  <CategoryCard category={category} key={category.id} />
+                  <CategoryCard
+                    category={category}
+                    key={category._id}
+                    setOpenForm={setOpenFormCategory}
+                    handleSelect={setSelectedCategory}
+                  />
                 ))}
               </div>
             </div>
@@ -274,6 +300,13 @@ function Income() {
           </form>
         </div>
       </div>
+
+      <FormCategory
+        openFormCategory={openFormCategory}
+        setOpenFormCategory={setOpenFormCategory}
+        type="income"
+        category={selectedCategory}
+      />
     </>
   )
 }

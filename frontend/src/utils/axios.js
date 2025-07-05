@@ -7,7 +7,5 @@ export const axiosInstance = axios.create({
 
 export const axiosAuthInstance = axios.create({
   baseURL: constants.BASE_URL,
-  headers: {
-    withCredentials: true,
-  },
+  withCredentials: true,
 })

@@ -21,9 +21,7 @@ export const getUser = createAsyncThunk(
   "auth/getUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthInstance.get("/auth/getUser", {
-        withCredentials: true,
-      })
+      const response = await axiosAuthInstance.get("/auth/getUser")
       return response.data
     } catch (error) {
       console.log(error)
