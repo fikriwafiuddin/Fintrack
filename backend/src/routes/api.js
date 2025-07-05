@@ -6,7 +6,7 @@ import userController from "../controllers/user-controller.js"
 
 const apiRouter = express.Router()
 
-apiRouter.get("/auth/getUser", authMiddleware, userController.getUser)
+apiRouter.get("/auth/getUser", authMiddleware, userController.get)
 
 apiRouter.get("/categories/:type", authMiddleware, categoryController.all)
 
