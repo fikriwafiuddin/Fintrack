@@ -58,7 +58,16 @@ const login = async (request) => {
   }
 }
 
+const get = async (id) => {
+  const user = await User.findById(id)
+  if (!user) {
+    throw new ResponseError("User not found", 404)
+  }
+  return user
+}
+
 export default {
   register,
   login,
+  get,
 }
