@@ -1,14 +1,16 @@
+import { Link } from "react-router-dom"
+
 function Home() {
   return (
     <div className="bg-slate-50 min-h-screen">
       <header className="border-b-2 border-slate-200 text-slate-700 p-4 flex items-center justify-between">
         <h1 className="text-slate-700 text-2xl font-bold">Fintrack</h1>
-        <button
-          type="button"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        <Link
+          to={"/dashboard"}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200"
         >
           Get Started
-        </button>
+        </Link>
       </header>
       <main className="pb-10">
         <section className="bg-gray-50 dark:bg-gray-900">
@@ -25,12 +27,14 @@ function Home() {
               </p>
             </div>
 
-            <button
-              type="button"
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg mx-auto mt-8 block hover:bg-blue-600 transition-colors duration-200"
-            >
-              Get Started
-            </button>
+            <div className="flex justify-center mt-8">
+              <Link
+                to={"/dashboard"}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200"
+              >
+                Get Started
+              </Link>
+            </div>
           </div>
           <div className="w-11/12 max-w-4xl mx-auto shadow-2xl rounded overflow-hidden">
             <img src="assets/dashboard.png" alt="dashboard" />
