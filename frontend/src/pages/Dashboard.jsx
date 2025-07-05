@@ -11,6 +11,8 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels"
 import { HiBanknotes } from "react-icons/hi2"
 import { FaArrowDown, FaArrowUp } from "react-icons/fa"
+import { useSelector } from "react-redux"
+import { formatCurrency } from "../utils/formatters"
 
 ChartJS.register(
   CategoryScale,
@@ -80,6 +82,7 @@ const pieOptions = {
 }
 
 function Dashboard() {
+  const { user } = useSelector((state) => state.auth)
   return (
     <>
       {/* stats */}
@@ -91,7 +94,7 @@ function Dashboard() {
           </div>
           <div className="">
             <h2 className="text-xl font-semibold text-slate-700">Ballance</h2>
-            <p className="text-slate-600">Rp 200.000</p>
+            <p className="text-slate-600">{formatCurrency(user.balance)}</p>
           </div>
         </div>
 
@@ -102,7 +105,9 @@ function Dashboard() {
           </div>
           <div className="">
             <h2 className="text-xl font-semibold text-slate-700">Expense</h2>
-            <p className="text-slate-600">Rp 200.000</p>
+            <p className="text-slate-600">
+              {formatCurrency(user.totalExpense)}
+            </p>
           </div>
         </div>
 
@@ -113,7 +118,7 @@ function Dashboard() {
           </div>
           <div className="">
             <h2 className="text-xl font-semibold text-slate-700">Income</h2>
-            <p className="text-slate-600">Rp 200.000</p>
+            <p className="text-slate-600">{formatCurrency(user.totalIncome)}</p>
           </div>
         </div>
       </div>
