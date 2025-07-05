@@ -53,7 +53,19 @@ const register = z
     path: ["confirmPassword"],
   })
 
+const updateProfile = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters long"),
+  balance: z.preprocess(
+    (val) => Number(val),
+    z.number({
+      required_error: "Balance is required",
+      invalid_type_error: "Balance must be a number",
+    })
+  ),
+})
+
 export default {
   login,
   register,
+  updateProfile,
 }

@@ -50,8 +50,22 @@ const get = async (req, res, next) => {
   }
 }
 
+const updateProfile = async (req, res, next) => {
+  try {
+    const userId = req.userId
+    const user = await userService.updateProfile(req.body, userId)
+    return res.status(200).json({
+      message: "User profile updated successfully",
+      data: { user },
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   register,
   login,
   get,
+  updateProfile,
 }

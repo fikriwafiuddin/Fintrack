@@ -53,7 +53,24 @@ const loginValidation = z.object({
     .min(1, "Password is required"),
 })
 
+const updateProfile = z.object({
+  username: z
+    .string({
+      required_error: "Username is required",
+      invalid_type_error: "Username must be a string",
+    })
+    .min(3, "Username must be at least 3 characters long"),
+  balance: z.preprocess(
+    (val) => Number(val),
+    z.number({
+      required_error: "Balance is required",
+      invalid_type_error: "Balance must be a number",
+    })
+  ),
+})
+
 export default {
   registerValidation,
   loginValidation,
+  updateProfile,
 }

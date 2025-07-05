@@ -6,6 +6,11 @@ import userController from "../controllers/user-controller.js"
 
 const apiRouter = express.Router()
 
+apiRouter.put(
+  "/auth/updateProfile",
+  authMiddleware,
+  userController.updateProfile
+)
 apiRouter.get("/auth/getUser", authMiddleware, userController.get)
 
 apiRouter.post("/categories/create", authMiddleware, categoryController.create)

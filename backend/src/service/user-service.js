@@ -66,8 +66,25 @@ const get = async (id) => {
   return user
 }
 
+const updateProfile = async (request, userId) => {
+  const { username, balance } = validation(
+    userValidation.updateProfile,
+    request
+  )
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { username, balance },
+    { new: true }
+  )
+  if (!user) {
+    throw new ResponseError("User not found", 404)
+  }
+  return user
+}
+
 export default {
   register,
   login,
   get,
+  updateProfile,
 }
