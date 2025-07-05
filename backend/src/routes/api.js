@@ -8,6 +8,17 @@ const apiRouter = express.Router()
 
 apiRouter.get("/auth/getUser", authMiddleware, userController.get)
 
+apiRouter.post("/categories/create", authMiddleware, categoryController.create)
+apiRouter.put(
+  "/categories/update/:id",
+  authMiddleware,
+  categoryController.update
+)
+apiRouter.delete(
+  "/categories/remove/:id",
+  authMiddleware,
+  categoryController.remove
+)
 apiRouter.get("/categories/:type", authMiddleware, categoryController.all)
 
 apiRouter.use(errorMiddleware)
