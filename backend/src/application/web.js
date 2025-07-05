@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import "dotenv/config"
+import cookieParser from "cookie-parser"
 import connectDB from "../utils/connectDB.js"
 import publicRouter from "../routes/public-api.js"
 import apiRouter from "../routes/api.js"
@@ -16,6 +17,7 @@ web.use(
   })
 )
 web.use(express.json())
+web.use(cookieParser())
 
 connectDB()
 
