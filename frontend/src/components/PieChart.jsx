@@ -9,6 +9,7 @@ import {
   Legend,
 } from "chart.js"
 import ChartDataLabels from "chartjs-plugin-datalabels"
+import { useSelector } from "react-redux"
 
 ChartJS.register(
   CategoryScale,
@@ -41,7 +42,8 @@ const pieOptions = {
 }
 
 function PieChart({ pieData }) {
-  return <Pie data={pieData} options={pieOptions} />
+  const { isLoading } = useSelector((state) => state.statistic)
+  return isLoading ? "Loading" : <Pie data={pieData} options={pieOptions} />
 }
 
 export default PieChart

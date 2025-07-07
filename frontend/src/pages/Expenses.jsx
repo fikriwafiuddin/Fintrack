@@ -21,7 +21,6 @@ function Expenses() {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [openFormTransaction, setOpenFormTransaction] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState(null)
-  const { barData, pieData } = useSelector((state) => state.expenses)
   const { categories, isLoadingGet } = useSelector((state) => state.category)
   const { transactions } = useSelector((state) => state.transaction)
   const dispatch = useDispatch()
@@ -46,35 +45,6 @@ function Expenses() {
 
   return (
     <>
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white shadow-xl p-4 rounded-xl flex items-center gap-4">
-          <div className="rounded-full bg-red-100 text-red-700 p-2">
-            <FaArrowDown size={24} />
-          </div>
-          <div className="">
-            <h2 className="text-xl font-semibold text-slate-700">
-              Total Expenses This Month
-            </h2>
-            <p className="text-slate-600">Rp 200.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-4">
-        <div className="md:col-span-2 bg-white shadow rounded-xl p-4">
-          <h2 className="text-lg font-semibold mb-4 text-slate-700">
-            Expenses Chart This Month
-          </h2>
-          <BarChart barData={barData} />
-        </div>
-        <div className="col-span-1 bg-white shadow rounded-xl p-4">
-          <h2 className="font-semibold mb-4 text-slate-700">
-            Percentage of expense this month
-          </h2>
-          <PieChart pieData={pieData} />
-        </div>
-      </div>
-
       <ToggleTab tabs={tabsExpenses} setTab={setTab} tab={tab} />
 
       <div className="mt-4 mb-24 text-slate-700 min-h-[500px]">

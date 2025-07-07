@@ -4,6 +4,7 @@ import Dashboard from "../pages/Dashboard"
 import Income from "../pages/Income"
 import Expenses from "../pages/Expenses"
 import Profile from "../pages/Profile"
+import Analytics from "../pages/Analytics"
 
 const privateRoute = {
   path: "/",
@@ -24,6 +25,10 @@ const privateRoute = {
     {
       path: "expenses",
       element: <Expenses />,
+    },
+    {
+      path: "analytics",
+      element: <Analytics />,
     },
     {
       path: "profile",

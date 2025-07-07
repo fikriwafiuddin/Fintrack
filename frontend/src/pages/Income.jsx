@@ -21,7 +21,6 @@ function Income() {
   const [openFormCategory, setOpenFormCategory] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [tab, setTab] = useState("category")
-  const { barData, pieData } = useSelector((state) => state.income)
   const { categories, isLoadingGet } = useSelector((state) => state.category)
   const { transactions } = useSelector((state) => state.transaction)
   const dispatch = useDispatch()
@@ -46,35 +45,6 @@ function Income() {
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white shadow-xl p-4 rounded-xl flex items-center gap-4">
-          <div className="rounded-full bg-green-100 text-green-700 p-2">
-            <FaArrowUp size={24} />
-          </div>
-          <div className="">
-            <h2 className="text-xl font-semibold text-slate-700">
-              Total Income This Month
-            </h2>
-            <p className="text-slate-600">Rp 200.000</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-2 bg-white shadow rounded-xl p-4">
-          <h2 className="text-lg font-semibold mb-4 text-slate-700">
-            Income Chart This Month
-          </h2>
-          <BarChart barData={barData} />
-        </div>
-        <div className="col-span-1 bg-white shadow rounded-xl p-4">
-          <h2 className="font-semibold mb-4 text-slate-700">
-            Percentage of income this month
-          </h2>
-          <PieChart pieData={pieData} />
-        </div>
-      </div>
-
       <ToggleTab tab={tab} setTab={setTab} tabs={tabs} />
 
       <div className="mt-4 mb-24 text-slate-700 min-h-[500px]">

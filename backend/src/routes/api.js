@@ -4,6 +4,7 @@ import authMiddleware from "../middlewares/auth-middleware.js"
 import errorMiddleware from "../middlewares/error-middleware.js"
 import userController from "../controllers/user-controller.js"
 import transactionController from "../controllers/transaction-controller.js"
+import statisticController from "../controllers/statistic-controller.js"
 
 const apiRouter = express.Router()
 
@@ -43,6 +44,12 @@ apiRouter.put(
   transactionController.update
 )
 apiRouter.get("/transaction/:type", authMiddleware, transactionController.all)
+
+apiRouter.get(
+  "/statistic/perMonth",
+  authMiddleware,
+  statisticController.statisticPerMonth
+)
 
 apiRouter.use(errorMiddleware)
 

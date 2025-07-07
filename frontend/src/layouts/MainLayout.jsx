@@ -4,6 +4,7 @@ import {
   FaUserCircle,
   FaArrowAltCircleUp,
   FaArrowAltCircleDown,
+  FaChartBar,
 } from "react-icons/fa"
 import { HiBars3, HiXMark } from "react-icons/hi2"
 import { useState } from "react"
@@ -29,6 +30,11 @@ const links = [
   //   url: "/budgeting",
   //   icon: <FaArrowAltCircleDown size={20} />,
   // },
+  {
+    label: "Analytics",
+    url: "/analytics",
+    icon: <FaChartBar size={20} />,
+  },
   {
     label: "Profile",
     url: "/profile",
