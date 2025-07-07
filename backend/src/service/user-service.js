@@ -28,6 +28,9 @@ const register = async (request) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      balance: user.balance,
+      totalIcome: user.totalIncome,
+      totalExpense: user.totalExpense,
     },
   }
 }
@@ -54,6 +57,9 @@ const login = async (request) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      balance: user.balance,
+      totalIcome: user.totalIncome,
+      totalExpense: user.totalExpense,
     },
   }
 }
@@ -63,7 +69,14 @@ const get = async (id) => {
   if (!user) {
     throw new ResponseError("User not found", 404)
   }
-  return user
+  return {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    balance: user.balance,
+    totalIcome: user.totalIncome,
+    totalExpense: user.totalExpense,
+  }
 }
 
 const updateProfile = async (request, userId) => {
@@ -79,7 +92,14 @@ const updateProfile = async (request, userId) => {
   if (!user) {
     throw new ResponseError("User not found", 404)
   }
-  return user
+  return {
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    balance: user.balance,
+    totalIcome: user.totalIncome,
+    totalExpense: user.totalExpense,
+  }
 }
 
 export default {
