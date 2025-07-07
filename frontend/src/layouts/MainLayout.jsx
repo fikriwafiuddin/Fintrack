@@ -8,6 +8,8 @@ import {
 } from "react-icons/fa"
 import { HiBars3, HiXMark } from "react-icons/hi2"
 import { useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { logout } from "../store/thunk/auth-thunk"
 
 const links = [
   {
@@ -44,14 +46,20 @@ const links = [
 
 function MainLayout() {
   const [openSidebar, setOpenSidebar] = useState(false)
+  const { isLoading } = useSelector((state) => state.auth)
   const location = useLocation()
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    dispatch(logout())
+  }
 
   return (
     <div className="bg-slate-50 min-h-screen">
       <aside
         className={`${
-          openSidebar ? "block" : "hidden md:block"
-        } bg-slate-50 border-r-2 border-slate-200 text-slate-700 p-4 fixed top-0 left-0 w-64 h-full`}
+          openSidebar ? "flex" : "hidden md:flex"
+        } flex-col justify-between bg-slate-50 border-r-2 border-slate-200 text-slate-700 p-4 fixed top-0 left-0 w-64 h-full`}
       >
         <button
           type="button"
@@ -61,26 +69,39 @@ function MainLayout() {
         >
           <HiXMark size={20} />
         </button>
-        <h1 className="text-center text-2xl font-bold">Fintrack</h1>
-        <nav>
-          <ul className="mt-8 space-y-2">
-            {links.map((link) => (
-              <li key={link.label}>
-                <Link
-                  to={link.url}
-                  className={`${
-                    location.pathname === link.url
-                      ? "bg-slate-200"
-                      : " hover:bg-slate-200"
-                  } px-4 py-2 rounded-lg flex items-center gap-4`}
-                >
-                  {link.icon}
-                  <span>{link.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="">
+          <h1 className="text-center text-2xl font-bold">Fintrack</h1>
+          <nav>
+            <ul className="mt-8 space-y-2">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={link.url}
+                    className={`${
+                      location.pathname === link.url
+                        ? "bg-slate-200"
+                        : " hover:bg-slate-200"
+                    } px-4 py-2 rounded-lg flex items-center gap-4`}
+                  >
+                    {link.icon}
+                    <span>{link.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+        <div className="text-sm space-y-4">
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={isLoading}
+            className="bg-red-600 hover:bg-red-700 text-red-200 w-full py-2 rounded"
+          >
+            {isLoading ? "Loading" : "Logout"}
+          </button>
+          <p>v0.0.0</p>
+        </div>
       </aside>
       {/* <Header /> */}
       <div className="md:ml-64 h-screen overflow-y-auto">

@@ -14,6 +14,7 @@ apiRouter.put(
   userController.updateProfile
 )
 apiRouter.get("/auth/getUser", authMiddleware, userController.get)
+apiRouter.get("/auth/logout", authMiddleware, userController.logout)
 
 apiRouter.post("/categories/create", authMiddleware, categoryController.create)
 apiRouter.put(

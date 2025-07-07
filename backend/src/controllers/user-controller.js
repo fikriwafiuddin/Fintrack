@@ -63,9 +63,24 @@ const updateProfile = async (req, res, next) => {
   }
 }
 
+const logout = (req, res, next) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    })
+
+    return res.status(200).json({ message: "Logout successfull", data: {} })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export default {
   register,
   login,
   get,
   updateProfile,
+  logout,
 }

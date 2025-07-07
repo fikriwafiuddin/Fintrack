@@ -57,3 +57,16 @@ export const updateProfile = createAsyncThunk(
     }
   }
 )
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosAuthInstance.get("/auth/logout")
+      return response.data
+    } catch (error) {
+      console.log(error)
+      return rejectWithValue(error.response.data)
+    }
+  }
+)
