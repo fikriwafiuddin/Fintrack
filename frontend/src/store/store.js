@@ -3,6 +3,7 @@ import incomeReducer from "./slice/incomeSlice"
 import expensesReducer from "./slice/expensesSlice"
 import authReducer from "./slice/authSlice"
 import categotyReducer from "./slice/categorySlice"
+import transactionReducer from "./slice/transactionSlice"
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     expenses: expensesReducer,
     auth: authReducer,
     category: categotyReducer,
+    transaction: transactionReducer,
   },
 })
 

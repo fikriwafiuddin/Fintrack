@@ -1,4 +1,4 @@
-function Table({ config, data }) {
+function Table({ config, data, actions }) {
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -12,7 +12,7 @@ function Table({ config, data }) {
             </th>
             {config.map((column) => (
               <th
-                key={column.id}
+                key={column._id}
                 scope="col"
                 className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
@@ -23,7 +23,7 @@ function Table({ config, data }) {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {data.map((row, index) => (
-            <tr key={row.id}>
+            <tr key={row._id}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {index + 1}
               </td>
@@ -32,7 +32,7 @@ function Table({ config, data }) {
                   key={column.id}
                   className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                 >
-                  {column.render(row)}
+                  {column.render(row, actions)}
                 </td>
               ))}
             </tr>

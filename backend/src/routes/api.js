@@ -3,6 +3,7 @@ import categoryController from "../controllers/category-controller.js"
 import authMiddleware from "../middlewares/auth-middleware.js"
 import errorMiddleware from "../middlewares/error-middleware.js"
 import userController from "../controllers/user-controller.js"
+import transactionController from "../controllers/transaction-controller.js"
 
 const apiRouter = express.Router()
 
@@ -25,6 +26,23 @@ apiRouter.delete(
   categoryController.remove
 )
 apiRouter.get("/categories/:type", authMiddleware, categoryController.all)
+
+apiRouter.post(
+  "/transaction/create",
+  authMiddleware,
+  transactionController.create
+)
+apiRouter.delete(
+  "/transaction/delete/:id",
+  authMiddleware,
+  transactionController.remove
+)
+apiRouter.put(
+  "/transaction/update/:id",
+  authMiddleware,
+  transactionController.update
+)
+apiRouter.get("/transaction/:type", authMiddleware, transactionController.all)
 
 apiRouter.use(errorMiddleware)
 

@@ -3,10 +3,12 @@ import { useDispatch, useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import { clearMsg as authClearMessage } from "../store/slice/authSlice"
 import { clearMsg as categoryClearMessage } from "../store/slice/categorySlice"
+import { clearMsg as transactionClearMessage } from "../store/slice/transactionSlice"
 
 function useMessage() {
   const authMsg = useSelector((state) => state.auth.message)
   const categoryMsg = useSelector((state) => state.category.message)
+  const transactionMsg = useSelector((state) => state.transaction.message)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -28,6 +30,16 @@ function useMessage() {
       dispatch(categoryClearMessage())
     }
   }, [categoryMsg.error, categoryMsg.success, dispatch])
+
+  useEffect(() => {
+    if (transactionMsg.success) {
+      toast.success(transactionMsg.success)
+      dispatch(transactionClearMessage())
+    } else if (transactionMsg.error) {
+      toast.error(transactionMsg.error)
+      dispatch(transactionClearMessage())
+    }
+  }, [transactionMsg.success, transactionMsg.error, dispatch])
 }
 
 export default useMessage

@@ -1,12 +1,18 @@
+import { formatCurrency, formatDate } from "../utils/formatters"
+
 export const configTableIncome = [
   { id: "category", label: "Category", render: (row) => row.category.name },
-  { id: "amount", label: "Amount", render: (row) => `Rp ${row.amount}` },
+  {
+    id: "amount",
+    label: "Amount",
+    render: (row) => formatCurrency(row.amount),
+  },
   {
     id: "date",
     label: "Date",
-    render: (row) => new Date(row.date).toLocaleDateString(),
+    render: (row) => formatDate(row.date),
   },
-  { id: "note", label: "Note", render: (row) => row.note },
+  { id: "note", label: "Note", render: (row) => row.note || "-" },
   {
     id: "actions",
     label: "Actions",

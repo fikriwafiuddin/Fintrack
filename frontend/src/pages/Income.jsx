@@ -9,20 +9,39 @@ import { configTableIncome, tabs } from "../config/income-config"
 import ToggleTab from "../components/ToggleTab"
 import FormCategory from "../components/FormCategory"
 import { getCategories } from "../store/thunk/category-thunk"
+import FormTransaction from "../components/FormTransaction"
+import {
+  deleteTransaction,
+  getTransactions,
+} from "../store/thunk/transactio-thunk"
 
 function Income() {
-  const [openForm, setOpenForm] = useState(false)
+  const [openFormTransaction, setOpenFormTransaction] = useState(false)
+  const [selectedTransaction, setSelectedTransaction] = useState(null)
   const [openFormCategory, setOpenFormCategory] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [tab, setTab] = useState("category")
-  const { transactions, barData, pieData } = useSelector(
-    (state) => state.income
-  )
+  const { barData, pieData } = useSelector((state) => state.income)
   const { categories, isLoadingGet } = useSelector((state) => state.category)
+  const { transactions } = useSelector((state) => state.transaction)
   const dispatch = useDispatch()
+
+  const actions = {
+    delete: (data) => {
+      dispatch(deleteTransaction(data._id))
+    },
+    edit: (data) => {
+      setSelectedTransaction(data)
+      setOpenFormTransaction(true)
+    },
+  }
 
   useEffect(() => {
     dispatch(getCategories("income"))
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getTransactions("income"))
   }, [dispatch])
 
   return (
@@ -100,7 +119,7 @@ function Income() {
               <button
                 type="button"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
-                onClick={() => setOpenForm(true)}
+                onClick={() => setOpenFormTransaction(true)}
               >
                 + Add Transaction
               </button>
@@ -171,135 +190,23 @@ function Income() {
                   </div>
                 </div>
               </div>
-              <Table config={configTableIncome} data={transactions} />
+              <Table
+                config={configTableIncome}
+                data={transactions}
+                actions={actions}
+              />
             </div>
           </>
         )}
       </div>
 
-      <div
-        className={`fixed ${
-          !openForm && "hidden"
-        }  inset-0 bg-gray-600/50 overflow-y-auto h-full w-full z-50`}
-      >
-        <div className="relative top-20 mx-auto p-5 w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-          <div className="flex justify-between items-center pb-3">
-            <h3 className="text-lg font-bold text-gray-900">Add Transaction</h3>
-            <button
-              onClick={() => setOpenForm(false)}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
-
-          <form className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="category"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Category
-                </label>
-                <select
-                  id="category"
-                  name="category"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option>Choose Category</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  htmlFor="amount"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Amount
-                </label>
-                <input
-                  id="amount"
-                  name="amount"
-                  type="number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="0"
-                  min="0"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Type
-                </label>
-                <select
-                  name="category_id"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option>Choose Type</option>
-                  <option value="expense">Expense</option>
-                  <option value="income">Income</option>
-                </select>
-              </div>
-              <div>
-                <label
-                  htmlFor="dadte"
-                  className="block text-sm font-medium text-gray-700 mb-1"
-                >
-                  Date
-                </label>
-                <input
-                  id="date"
-                  name="date"
-                  type="date"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Note
-              </label>
-              <textarea
-                name="note"
-                rows="3"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              ></textarea>
-            </div>
-
-            <div className="flex justify-end space-x-3 pt-4 border-t">
-              <button
-                type="button"
-                onClick={() => setOpenForm(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Batal
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-blue-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Simpan Barang
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <FormTransaction
+        openForm={openFormTransaction}
+        setOpenForm={setOpenFormTransaction}
+        type="income"
+        transaction={selectedTransaction}
+        setTransaction={setSelectedTransaction}
+      />
 
       <FormCategory
         openFormCategory={openFormCategory}
