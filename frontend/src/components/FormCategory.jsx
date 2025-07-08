@@ -3,7 +3,8 @@ import categoryValidation from "../validations/category-validation"
 import { useDispatch, useSelector } from "react-redux"
 import { useForm } from "react-hook-form"
 import { createCategory, updateCategory } from "../store/thunk/category-thunk"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import EmojiPicker from "emoji-picker-react"
 
 function FormCategory({
   openFormCategory,
@@ -16,17 +17,19 @@ function FormCategory({
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm({
     resolver: zodResolver(categoryValidation.create),
     mode: "onSubmit",
     values: {
-      icon: category?.icon || "",
+      icon: category?.icon || "🍔",
       name: category?.name || "",
     },
   })
   const { isLoadingPost, message, isLoadingPut } = useSelector(
     (state) => state.category
   )
+  const [showPicker, setShowPicker] = useState(false)
   const dispatch = useDispatch()
 
   const onSubmit = async (data) => {
@@ -47,6 +50,11 @@ function FormCategory({
           }
         })
     }
+  }
+
+  const handleEmojiClick = (emojiData) => {
+    setValue("icon", emojiData.emoji, { shouldValidate: true }) // update form value & trigger validation
+    setShowPicker(false)
   }
 
   useEffect(() => {
@@ -101,9 +109,17 @@ function FormCategory({
                 {...register("icon")}
                 id="icon"
                 name="icon"
-                type="text"
+                readOnly
+                onClick={() => setShowPicker(true)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+              <div
+                className={`${
+                  showPicker ? "" : "hidden"
+                } fixed inset-0 flex justify-center items-center`}
+              >
+                <EmojiPicker onEmojiClick={handleEmojiClick} />
+              </div>
               {errors.icon && (
                 <p className="text-sm text-red-600">{errors.icon.message}</p>
               )}
