@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react"
-import BarChart from "../components/BarChart"
-import PieChart from "../components/PieChart"
-import { FaArrowUp } from "react-icons/fa"
 import CategoryCard from "../components/CategoryCard"
 import Table from "../components/Table"
 import { useDispatch, useSelector } from "react-redux"
@@ -14,15 +11,19 @@ import {
   deleteTransaction,
   getTransactions,
 } from "../store/thunk/transactio-thunk"
+import Pagination from "../components/Pagination"
+import { setPage } from "../store/slice/transactionSlice"
 
 function Income() {
   const [openFormTransaction, setOpenFormTransaction] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState(null)
   const [openFormCategory, setOpenFormCategory] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [filteCategory, setFilterCategory] = useState("")
   const [tab, setTab] = useState("category")
   const { categories, isLoadingGet } = useSelector((state) => state.category)
-  const { transactions } = useSelector((state) => state.transaction)
+  const { transactions, totalPages, totalTransactions, currentPage } =
+    useSelector((state) => state.transaction)
   const dispatch = useDispatch()
 
   const actions = {
@@ -40,9 +41,19 @@ function Income() {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getTransactions("income"))
-  }, [dispatch])
+    dispatch(
+      getTransactions({
+        type: "income",
+        page: currentPage,
+        category: filteCategory,
+      })
+    )
+  }, [dispatch, currentPage, filteCategory])
 
+  const handleFilterCategory = (e) => {
+    dispatch(setPage(1))
+    setFilterCategory(e.target.value)
+  }
   return (
     <>
       <ToggleTab tab={tab} setTab={setTab} tabs={tabs} />
@@ -97,45 +108,29 @@ function Income() {
             <div className="flex gap-4 mt-2">
               <div className="">
                 <label
-                  htmlFor=""
+                  htmlFor="category"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Type
+                  Category
                 </label>
                 <select
+                  value={filteCategory}
+                  onChange={handleFilterCategory}
                   name="type"
-                  id=""
+                  id="category"
                   className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500"
                 >
                   <option value="all">All</option>
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                </select>
-              </div>
-              <div className="">
-                <label
-                  htmlFor=""
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Time
-                </label>
-                <select
-                  name=""
-                  id=""
-                  className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500"
-                >
-                  <option value="all">All</option>
-                  <option value="today">Today</option>
-                  <option value="this-week">This Week</option>
-                  <option value="this-month">This Month</option>
-                  <option value="this-year">This Year</option>
+                  {categories.map((category) => (
+                    <option value={category._id}>{category.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
 
-            <div className="bg-white shadow rounded-xl mt-4 p-4">
+            <div className="bg-white shadow rounded-xl mt-4 p-4 overflow-y-auto">
               <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between">
                   <h3 className="text-lg font-medium text-gray-900">
                     List Transactions
                   </h3>
@@ -164,6 +159,12 @@ function Income() {
                 config={configTableIncome}
                 data={transactions}
                 actions={actions}
+              />
+
+              <Pagination
+                totalData={totalTransactions}
+                totalPages={totalPages}
+                currentPage={currentPage}
               />
             </div>
           </>

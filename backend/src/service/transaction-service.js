@@ -1,4 +1,3 @@
-import { request } from "express"
 import ResponseError from "../error/error-response.js"
 import Category from "../models/category-model.js"
 import Transaction from "../models/transaction-model.js"
@@ -43,13 +42,36 @@ const create = async (request, userId) => {
   return transaction
 }
 
-const all = async (type, userId) => {
-  validation(transactionValidation.all, type)
+const all = async (request, userId) => {
+  const {
+    type,
+    page = 1,
+    category,
+  } = validation(transactionValidation.all, request)
 
-  const transactions = await Transaction.find({ user: userId, type }).populate(
-    "category"
-  )
-  return transactions
+  const limit = 10
+  const skip = (page - 1) * limit
+
+  const filter = {
+    user: userId,
+    type,
+  }
+  if (category) filter.category = category
+
+  const transactions = await Transaction.find(filter)
+    .populate("category")
+    .sort({
+      date: 1,
+    })
+    .skip(skip)
+    .limit(limit)
+
+  const totalTransactions = await Transaction.countDocuments({
+    user: userId,
+    type,
+  })
+  const totalPages = Math.ceil(totalTransactions / limit)
+  return { transactions, totalTransactions, totalPages }
 }
 
 const remove = async (id, userId) => {

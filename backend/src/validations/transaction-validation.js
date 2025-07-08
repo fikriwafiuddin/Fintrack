@@ -39,9 +39,26 @@ const create = z.object({
     .optional(),
 })
 
-const all = z.enum(["income", "expense"], {
-  required_error: "Type is required",
-  invalid_type_error: "Type must be either 'income' or 'expense'",
+const all = z.object({
+  type: z.enum(["income", "expense"], {
+    required_error: "Type is required",
+    invalid_type_error: "Type must be either 'income' or 'expense'",
+  }),
+  page: z.preprocess(
+    (val) => (val !== undefined ? Number(val) : undefined),
+    z
+      .number({ invalid_type_error: "Page must be a number" })
+      .nonnegative({ message: "Page must be positive number" })
+      .optional()
+  ),
+
+  category: z
+    .string()
+    .transform((val) => (val === "" ? undefined : val))
+    .optional()
+    .refine((val) => val === undefined || val.length === 24, {
+      message: "Category must be exactly 24 characters long",
+    }),
 })
 
 const remove = z

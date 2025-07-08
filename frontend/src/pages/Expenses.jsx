@@ -14,15 +14,19 @@ import {
   getTransactions,
 } from "../store/thunk/transactio-thunk"
 import FormTransaction from "../components/FormTransaction"
+import Pagination from "../components/Pagination"
+import { setPage } from "../store/slice/transactionSlice"
 
 function Expenses() {
   const [tab, setTab] = useState("category")
   const [openFormCategory, setOpenFormCategory] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState(null)
+  const [filteCategory, setFilterCategory] = useState("")
   const [openFormTransaction, setOpenFormTransaction] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState(null)
   const { categories, isLoadingGet } = useSelector((state) => state.category)
-  const { transactions } = useSelector((state) => state.transaction)
+  const { transactions, totalPages, totalTransactions, currentPage } =
+    useSelector((state) => state.transaction)
   const dispatch = useDispatch()
 
   const actions = {
@@ -40,8 +44,18 @@ function Expenses() {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getTransactions("expense"))
-  }, [dispatch])
+    dispatch(
+      getTransactions({
+        type: "expense",
+        page: currentPage,
+        category: filteCategory,
+      })
+    )
+  }, [dispatch, currentPage, filteCategory])
+  const handleFilterCategory = (e) => {
+    dispatch(setPage(1))
+    setFilterCategory(e.target.value)
+  }
 
   return (
     <>
@@ -99,38 +113,22 @@ function Expenses() {
             <div className="flex gap-4 mt-2">
               <div className="">
                 <label
-                  htmlFor=""
+                  htmlFor="category"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Type
+                  Category
                 </label>
                 <select
+                  value={filteCategory}
+                  onChange={handleFilterCategory}
                   name="type"
-                  id=""
+                  id="category"
                   className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500"
                 >
                   <option value="all">All</option>
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                </select>
-              </div>
-              <div className="">
-                <label
-                  htmlFor=""
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Time
-                </label>
-                <select
-                  name=""
-                  id=""
-                  className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-slate-500 focus:border-slate-500"
-                >
-                  <option value="all">All</option>
-                  <option value="today">Today</option>
-                  <option value="this-week">This Week</option>
-                  <option value="this-month">This Month</option>
-                  <option value="this-year">This Year</option>
+                  {categories.map((category) => (
+                    <option value={category._id}>{category.name}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -165,6 +163,12 @@ function Expenses() {
                 config={configTableExpeses}
                 data={transactions}
                 actions={actions}
+              />
+
+              <Pagination
+                totalData={totalTransactions}
+                totalPages={totalPages}
+                currentPage={currentPage}
               />
             </div>
           </>

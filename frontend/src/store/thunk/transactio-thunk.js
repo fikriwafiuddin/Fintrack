@@ -16,9 +16,9 @@ export const createTransaction = createAsyncThunk(
 
 export const getTransactions = createAsyncThunk(
   "transaction/getTransactions",
-  async (type, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthInstance(`/transaction/${type}`)
+      const response = await axiosAuthInstance(`/transaction`, { params: data })
       return response.data
     } catch (error) {
       console.log(error)

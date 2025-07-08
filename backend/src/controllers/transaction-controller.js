@@ -17,12 +17,11 @@ const create = async (req, res, next) => {
 const all = async (req, res, next) => {
   try {
     const userId = req.userId
-    const type = req.params.type
 
-    const transactions = await transactionService.all(type, userId)
+    const result = await transactionService.all(req.query, userId)
     return res.status(200).json({
       message: "Transactions fetched successfully",
-      data: { transactions },
+      data: { ...result },
     })
   } catch (error) {
     next(error)

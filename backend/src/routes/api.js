@@ -44,7 +44,7 @@ apiRouter.put(
   authMiddleware,
   transactionController.update
 )
-apiRouter.get("/transaction/:type", authMiddleware, transactionController.all)
+apiRouter.get("/transaction", authMiddleware, transactionController.all)
 
 apiRouter.get(
   "/statistic/perMonth",

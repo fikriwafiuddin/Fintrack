@@ -10,6 +10,9 @@ const transactionSlice = createSlice({
   name: "transaction",
   initialState: {
     transactions: [],
+    totalTransactions: 0,
+    totalPages: 0,
+    currentPage: 1,
     isLoadingPost: false,
     isLoadingGet: false,
     isLoadingDelete: false,
@@ -25,6 +28,9 @@ const transactionSlice = createSlice({
         success: "",
         error: "",
       }
+    },
+    setPage: (state, action) => {
+      state.currentPage = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -51,6 +57,8 @@ const transactionSlice = createSlice({
       .addCase(getTransactions.fulfilled, (state, action) => {
         state.isLoadingGet = false
         state.transactions = action.payload.data.transactions
+        state.totalPages = action.payload.data.totalPages
+        state.totalTransactions = action.payload.data.totalTransactions
       })
       .addCase(getTransactions.rejected, (state) => {
         state.isLoadingGet = false
@@ -93,5 +101,5 @@ const transactionSlice = createSlice({
   },
 })
 
-export const { clearMsg } = transactionSlice.actions
+export const { clearMsg, setPage } = transactionSlice.actions
 export default transactionSlice.reducer
