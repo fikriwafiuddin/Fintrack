@@ -1,4 +1,6 @@
 export const formatCurrency = (number) => {
+  if (typeof number != "number") return number
+
   return number.toLocaleString("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -6,6 +8,8 @@ export const formatCurrency = (number) => {
 }
 
 export const formatDate = (date) => {
+  if (!date) return null
+
   return new Date(date).toLocaleString("id-ID", {
     dateStyle: "long",
     timeStyle: "short",
