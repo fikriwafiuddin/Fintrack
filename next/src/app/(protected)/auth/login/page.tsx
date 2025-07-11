@@ -11,17 +11,24 @@ function Login() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-    // setError,
   } = useForm({
     resolver: zodResolver(authValidation.login),
     mode: "onSubmit",
   })
-  const loginMutation = useLogin()
+  const { isPending, mutate } = useLogin()
 
   const onSubmit = async (data: LoginCredentials) => {
-    console.log(data)
-    loginMutation.mutate(data)
+    mutate(data, {
+      onError: (error) => {
+        for (const key in error.errors) {
+          setError(key as keyof LoginCredentials, {
+            message: error.errors[key][0],
+          })
+        }
+      },
+    })
   }
 
   return (
@@ -38,7 +45,7 @@ function Login() {
               type="email"
               className="w-full p-2 border border-gray-300 rounded"
               placeholder="Enter your email"
-              // required
+              required
             />
             {errors.email && (
               <p className="text-sm text-red-600">{errors.email.message}</p>
@@ -60,12 +67,11 @@ function Login() {
             )}
           </div>
           <button
-            // disabled={isLoading}
+            disabled={isPending}
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
           >
-            Login
-            {/* {isLoading ? "Loading" : "Login"} */}
+            {isPending ? "Loading" : "Login"}
           </button>
         </form>
         <p className="mt-4 text-center text-gray-600">

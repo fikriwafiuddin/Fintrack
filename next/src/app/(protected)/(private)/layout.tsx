@@ -2,7 +2,7 @@
 
 import { useLogout, useUserFromCache } from "@/lib/hooks/useAuth"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { redirect, usePathname } from "next/navigation"
 import React, { useState } from "react"
 import {
   FaArrowAltCircleDown,
@@ -46,12 +46,11 @@ function Layout({ children }: { children: React.ReactNode }) {
   const { isPending, mutate } = useLogout()
   const pathName = usePathname()
   const user = useUserFromCache()
-  const router = useRouter()
 
   const handleLogout = () => mutate()
 
   if (!user) {
-    return router.push("/auth/login")
+    return redirect("/auth/login")
   }
 
   return (
