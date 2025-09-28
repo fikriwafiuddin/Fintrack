@@ -1,18 +1,19 @@
 export type Category = {
   _id: string
-  user: string
+  user?: string
   name: string
   type: string
   color: string
-  is_default: boolean
+  isDefault: boolean
+  createdAt: Date
 }
 
 export type Transaction<TCategory> = {
   _id: string
   user: string
   category: TCategory
-  type: string
+  type: "expense" | "income"
   amount: number
   date: Date
-  notes: string
+  notes?: string
 }
