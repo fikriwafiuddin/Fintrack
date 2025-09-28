@@ -1,0 +1,62 @@
+Table Users {
+  id integer [primary key, increment]
+  username varchar
+  email varchar unique
+  password varhcar
+  balance integer
+  created_at timestamp
+}
+
+enum TypeCategories {
+  expenses
+  income
+  both
+}
+
+Table Categories {
+  id integer [primary key]
+  user_id integer [ref: > Users.id]
+  name varchar
+  type TypeCategories
+  color varchar
+  is_default boolean
+  created_at timestamp
+}
+
+Enum TypeTransactions {
+  expenses
+  income
+}
+
+Table Transactions {
+  id integer [primary key, increment]
+  user_id integer [ref: > Users.id]
+  category_id integer [ref: > Categories.id]
+  type TypeTransactions
+  amount integer
+  date date
+  notes varchar
+  created_at timestamp
+}
+
+Table Monthly_summary {
+  id integer [primary key]
+  user_id integer [ref: > Users.id]
+  report_month date
+  total_income integer
+  total_expense integer
+  created_at timestamp
+}
+
+Table Category_summary {
+  id integer [primary key]
+  monthly_summary_id integer [ref: > Monthly_summary.id]
+  category_id integer [ref: > Categories.id]
+  type TypeTransactions
+  amount integer
+  created_at timestamp
+}
+
+Ref: "Categories"."user_id" < "Categories"."name"
+
+Ref: "Transactions"."user_id" < "Transactions"."id"

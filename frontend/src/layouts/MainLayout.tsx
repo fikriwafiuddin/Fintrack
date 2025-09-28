@@ -1,10 +1,16 @@
+import { AppSidebar } from "@/components/AppSidebar"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Outlet } from "react-router"
 
 function MainLayout() {
   return (
-    <div>
-      <Outlet />
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="p-4">
+        <SidebarTrigger />
+        <Outlet />
+      </main>
+    </SidebarProvider>
   )
 }
 
