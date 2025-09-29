@@ -3,6 +3,7 @@ import LandingPage from "./pages/landing/page"
 import MainLayout from "./layouts/MainLayout"
 import DashboardPage from "./pages/dashboard/page"
 import AddTransactionPage from "./pages/add-transaction/page"
+import TransactionsPage from "./pages/transactions/page"
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "add-transaction",
         Component: AddTransactionPage,
+      },
+      {
+        path: "transactions",
+        Component: TransactionsPage,
       },
     ],
   },

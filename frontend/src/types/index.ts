@@ -4,8 +4,8 @@ export type Category = {
   name: string
   type: string
   color: string
-  isDefault: boolean
-  createdAt: Date
+  isDefault?: boolean
+  createdAt?: Date
 }
 
 export type Transaction<TCategory> = {
@@ -16,4 +16,12 @@ export type Transaction<TCategory> = {
   amount: number
   date: Date
   notes?: string
+}
+
+export interface TransactionFilter {
+  categoryId?: string
+  type?: "income" | "expense"
+  startDate?: Date
+  endDate?: Date
+  searchTerm?: string
 }
