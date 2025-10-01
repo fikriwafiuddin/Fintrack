@@ -2,7 +2,7 @@ export type Category = {
   _id: string
   user?: string
   name: string
-  type: string
+  type: "expense" | "income" | "both"
   color: string
   isDefault?: boolean
   createdAt?: Date

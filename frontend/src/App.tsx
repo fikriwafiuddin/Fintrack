@@ -5,6 +5,7 @@ import DashboardPage from "./pages/dashboard/page"
 import AddTransactionPage from "./pages/add-transaction/page"
 import TransactionsPage from "./pages/transactions/page"
 import ReportsPage from "./pages/reports/page"
+import CategoriesPage from "./pages/categories/page"
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "reports",
         Component: ReportsPage,
+      },
+      {
+        path: "categories",
+        Component: CategoriesPage,
       },
     ],
   },
