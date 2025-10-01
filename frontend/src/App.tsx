@@ -4,6 +4,7 @@ import MainLayout from "./layouts/MainLayout"
 import DashboardPage from "./pages/dashboard/page"
 import AddTransactionPage from "./pages/add-transaction/page"
 import TransactionsPage from "./pages/transactions/page"
+import ReportsPage from "./pages/reports/page"
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "transactions",
         Component: TransactionsPage,
+      },
+      {
+        path: "reports",
+        Component: ReportsPage,
       },
     ],
   },
