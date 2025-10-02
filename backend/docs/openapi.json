@@ -1,0 +1,2518 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fintrack API",
+    "version": "1.0.0",
+    "description": "This is a sample server for a financial tracking application."
+  },
+  "paths": {
+    "/categories": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Categories"],
+        "summary": "Get all categories",
+        "responses": {
+          "200": {
+            "description": "A list of categories.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category retrivied successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "defaulCategory": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/DefaultCategory"
+                          }
+                        },
+                        "customCategory": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/CustomCategory"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Categories"],
+        "summary": "Create a new category",
+        "description": "Create a new category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 50,
+                    "example": "Groceries"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["income", "expense", "both"],
+                    "example": "expense"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$",
+                    "example": "#FF5733"
+                  }
+                },
+                "required": ["name", "type", "color"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "$ref": "#/components/schemas/CustomCategory"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "name": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Name must be at least 3 characters"
+                            }
+                          },
+                          "type": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Type must be one of 'income', 'expense', 'both'"
+                            }
+                          },
+                          "color": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Color must be a valid hex code"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/{categoryId}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Categories"],
+        "summary": "Update category",
+        "description": "Update data category by id",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 50,
+                    "example": "Groceries"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["income", "expense", "both"],
+                    "example": "expense"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9A-Fa-f]{6}$",
+                    "example": "#FF5733"
+                  }
+                },
+                "required": ["name", "type", "color"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "$ref": "#/components/schemas/CustomCategory"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "name": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Name must be at least 3 characters"
+                            }
+                          },
+                          "type": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Type must be one of 'income', 'expense', 'both'"
+                            }
+                          },
+                          "color": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Color must be a valid hex code"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category not found"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the category to update",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Categories"],
+        "summary": "Delete category",
+        "description": "Delete category by id",
+        "responses": {
+          "200": {
+            "description": "Category deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category deleted successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "$ref": "#/components/schemas/CustomCategory"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Category not found"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the category to delete",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          }
+        ]
+      }
+    },
+    "/transactions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Transactions"],
+        "summary": "Get all transactions",
+        "responses": {
+          "200": {
+            "description": "A list of transactions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transactions retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transactions": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "description": "Filter transactions by category ID",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "description": "Filter transactions by type (income or expense)",
+            "schema": {
+              "type": "string",
+              "enum": ["income", "expense", "all"],
+              "example": "expense"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "description": "Sort transactions by date (asc or desc)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"],
+              "example": "desc"
+            }
+          }
+        ]
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Transactions"],
+        "summary": "Create a new transaction",
+        "description": "Create a new transaction",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 150.75
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["income", "expense"],
+                    "example": "expense"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-10-01T14:48:00.000Z"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Grocery shopping at Walmart"
+                  }
+                },
+                "required": ["amount", "type", "category", "date"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction": {
+                          "$ref": "#/components/schemas/Transaction"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "amount": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Amount must be a positive number"
+                            }
+                          },
+                          "type": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Type must be either 'income' or 'expense'"
+                            }
+                          },
+                          "category": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Category ID is required"
+                            }
+                          },
+                          "date": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Date must be a valid date-time string"
+                            }
+                          },
+                          "notes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Notes cannot exceed 200 characters"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transactions/{transactionId}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Transactions"],
+        "summary": "Update transaction",
+        "description": "Update data transaction by id",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 150.75
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["income", "expense"],
+                    "example": "expense"
+                  },
+                  "category": {
+                    "type": "string",
+                    "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-10-01T14:48:00.000Z"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "example": "Grocery shopping at Walmart"
+                  }
+                },
+                "required": ["amount", "type", "category", "date"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction": {
+                          "$ref": "#/components/schemas/Transaction"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "amount": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Amount must be a positive number"
+                            }
+                          },
+                          "type": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Type must be either 'income' or 'expense'"
+                            }
+                          },
+                          "category": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Category ID is required"
+                            }
+                          },
+                          "date": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Date must be a valid date-time string"
+                            }
+                          },
+                          "notes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "Notes cannot exceed 200 characters"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction not found"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the transaction to update",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Transactions"],
+        "summary": "Delete transaction",
+        "description": "Delete transaction by id",
+        "responses": {
+          "200": {
+            "description": "Transaction deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction deleted successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction": {
+                          "$ref": "#/components/schemas/Transaction"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Transaction not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Transaction not found"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the transaction to delete",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          }
+        ]
+      }
+    },
+    "/dashboard/balance": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Dashboard"],
+        "summary": "Get balance dashboard data",
+        "responses": {
+          "200": {
+            "description": "Balance dashboard data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User dashboard data retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "balance": {
+                          "type": "number",
+                          "example": 2000.0
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/summary": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Dashboard"],
+        "summary": "Get summary dashboard data",
+        "responses": {
+          "200": {
+            "description": "Summary dashboard data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User dashboard data retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totalIncome": {
+                          "type": "number",
+                          "example": 5000.0
+                        },
+                        "totalExpense": {
+                          "type": "number",
+                          "example": 3000.0
+                        },
+                        "difference": {
+                          "type": "number",
+                          "example": 2000.0
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "description": "Filter summary by month (1-12)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12,
+              "example": 10
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "description": "Filter summary by year (e.g., 2025)",
+            "schema": {
+              "type": "integer",
+              "minimum": 2000,
+              "maximum": 2100,
+              "example": 2025
+            }
+          }
+        ]
+      }
+    },
+    "/dashboard/recent-transactions": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Dashboard"],
+        "summary": "Get recent transactions",
+        "responses": {
+          "200": {
+            "description": "Recent transactions retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Recent transactions retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transactions": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Transaction"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports/summary": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Reports"],
+        "summary": "Get summary report",
+        "responses": {
+          "200": {
+            "description": "Summary report retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Summary report retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totalIncome": {
+                          "type": "number",
+                          "example": 5000.0
+                        },
+                        "totalExpense": {
+                          "type": "number",
+                          "example": 3000.0
+                        },
+                        "difference": {
+                          "type": "number",
+                          "example": 2000.0
+                        },
+                        "totalTransactions": {
+                          "type": "integer",
+                          "example": 25
+                        },
+                        "expenseCategoryBreakdown": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "category": {
+                                "type": "object",
+                                "properties": {
+                                  "_id": {
+                                    "type": "string",
+                                    "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "example": "Groceries"
+                                  },
+                                  "color": {
+                                    "type": "string",
+                                    "example": "#FF5733"
+                                  }
+                                }
+                              },
+                              "totalAmount": {
+                                "type": "number",
+                                "example": 800.0
+                              }
+                            }
+                          }
+                        },
+                        "incomeCategoryBreakdown": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "category": {
+                                "type": "object",
+                                "properties": {
+                                  "_id": {
+                                    "type": "string",
+                                    "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "example": "Groceries"
+                                  },
+                                  "color": {
+                                    "type": "string",
+                                    "example": "#FF5733"
+                                  }
+                                }
+                              },
+                              "totalAmount": {
+                                "type": "number",
+                                "example": 800.0
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "required": false,
+            "description": "Filter summary by month (1-12)",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12,
+              "example": 10
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": false,
+            "description": "Filter summary by year (e.g., 2025)",
+            "schema": {
+              "type": "integer",
+              "minimum": 2000,
+              "maximum": 2100,
+              "example": 2025
+            }
+          }
+        ]
+      }
+    },
+
+    "/reports/tren-6-months": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Reports"],
+        "summary": "Get 6 months trend report",
+        "responses": {
+          "200": {
+            "description": "6 months trend report retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "6 months trend report retrieved successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "months": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "2025-04"
+                          }
+                        },
+                        "incomeData": {
+                          "type": "array",
+                          "items": {
+                            "type": "number",
+                            "example": 4000.0
+                          }
+                        },
+                        "expenseData": {
+                          "type": "array",
+                          "items": {
+                            "type": "number",
+                            "example": 2500.0
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "example": []
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DefaultCategory": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+          },
+          "name": {
+            "type": "string",
+            "example": "Groceries"
+          },
+          "type": {
+            "type": "string",
+            "example": "Expense"
+          },
+          "color": {
+            "type": "string",
+            "example": "#FF5733"
+          },
+          "isDefault": {
+            "type": "boolean",
+            "example": "true"
+          }
+        }
+      },
+      "CustomCategory": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+          },
+          "name": {
+            "type": "string",
+            "example": "Groceries"
+          },
+          "type": {
+            "type": "string",
+            "example": "Expense"
+          },
+          "color": {
+            "type": "string",
+            "example": "#FF5733"
+          },
+          "isDefault": {
+            "type": "boolean",
+            "example": "false"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+          },
+          "amount": {
+            "type": "number",
+            "example": 150.75
+          },
+          "type": {
+            "type": "string",
+            "example": "expense"
+          },
+          "category": {
+            "$ref": "#/components/schemas/CustomCategory"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-10-01T14:48:00.000Z"
+          },
+          "notes": {
+            "type": "string",
+            "example": "Grocery shopping at Walmart"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
