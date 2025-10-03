@@ -5,10 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useAuth } from "@clerk/clerk-react"
 import { ArrowRight, PieChart, Wallet, TrendingUp, Shield } from "lucide-react"
 import { Link } from "react-router"
 
 const LandingPage = () => {
+  const { userId, isLoaded } = useAuth()
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary">
       {/* Hero Section */}
@@ -26,8 +36,8 @@ const LandingPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">
-              <Link to="/sign-in">
-                Start Now
+              <Link to={userId ? "/dashboard" : "/sign-in"}>
+                {userId ? "Go to Dashboard" : "Start Now"}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -142,10 +152,17 @@ const LandingPage = () => {
             Join thousands of users who have already experienced the benefits
           </p>
           <Button size="lg" variant="secondary" asChild>
-            <Link to="/sign-in">
-              Register Now for Free
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
+            {userId ? (
+              <Link to="/dashboard">
+                Go to Dashboard
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            ) : (
+              <Link to="/sign-in">
+                Register Now for Free
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            )}
           </Button>
         </div>
       </div>
