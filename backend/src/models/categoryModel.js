@@ -2,6 +2,10 @@ import mongoose from "mongoose"
 
 const categorySchema = new mongoose.Schema(
   {
+    user: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -17,9 +21,26 @@ const categorySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    isDefault: {
+      type: Boolean,
+      default: false,
+    },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 )
+
+categorySchema.pre(/^find/, function (next) {
+  this.where({ deleted: { $ne: true } })
+  next()
+})
 
 const Category = mongoose.model("Category", categorySchema)
 export default Category
