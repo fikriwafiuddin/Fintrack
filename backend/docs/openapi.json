@@ -1898,27 +1898,16 @@
         },
         "parameters": [
           {
-            "name": "month",
+            "name": "period",
             "in": "query",
             "required": false,
-            "description": "Filter summary by month (1-12)",
+            "description": "Filter summary by period",
             "schema": {
-              "type": "integer",
+              "type": "string",
+              "enum": ["today", "week", "month"],
               "minimum": 1,
               "maximum": 12,
-              "example": 10
-            }
-          },
-          {
-            "name": "year",
-            "in": "query",
-            "required": false,
-            "description": "Filter summary by year (e.g., 2025)",
-            "schema": {
-              "type": "integer",
-              "minimum": 2000,
-              "maximum": 2100,
-              "example": 2025
+              "example": "today"
             }
           }
         ]
