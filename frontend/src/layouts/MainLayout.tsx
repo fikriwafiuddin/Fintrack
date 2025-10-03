@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/AppSidebar"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SignedIn, UserButton } from "@clerk/clerk-react"
 import { Outlet } from "react-router"
 
 function MainLayout() {
@@ -7,7 +8,14 @@ function MainLayout() {
     <SidebarProvider>
       <AppSidebar />
       <main className="p-4 flex-1">
-        <SidebarTrigger />
+        <header className="flex justify-between">
+          <SidebarTrigger />
+          <div className="">
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
+        </header>
         <Outlet />
       </main>
     </SidebarProvider>
