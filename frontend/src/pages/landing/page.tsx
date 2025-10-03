@@ -26,7 +26,7 @@ const LandingPage = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">
-              <Link to="/auth">
+              <Link to="/sign-in">
                 Start Now
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -142,7 +142,7 @@ const LandingPage = () => {
             Join thousands of users who have already experienced the benefits
           </p>
           <Button size="lg" variant="secondary" asChild>
-            <Link to="/auth">
+            <Link to="/sign-in">
               Register Now for Free
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>

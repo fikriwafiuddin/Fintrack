@@ -6,6 +6,7 @@ import AddTransactionPage from "./pages/add-transaction/page"
 import TransactionsPage from "./pages/transactions/page"
 import ReportsPage from "./pages/reports/page"
 import CategoriesPage from "./pages/categories/page"
+import AuthPage from "./pages/auth/page"
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  { path: "/sign-in", Component: AuthPage },
 ])
 
 function App() {

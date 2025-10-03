@@ -1,0 +1,11 @@
+import { SignIn } from "@clerk/clerk-react"
+
+function AuthPage() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <SignIn />
+    </div>
+  )
+}
+
+export default AuthPage
