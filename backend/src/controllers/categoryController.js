@@ -7,7 +7,7 @@ const create = async (req, res, next) => {
     const request = req.body
 
     const category = await categoryService.create(request, user)
-    res
+    return res
       .status(201)
       .json(new SuccessResponse("Category successfully created", category))
   } catch (error) {
@@ -21,7 +21,7 @@ const update = async (req, res, next) => {
     const request = { ...req.body, id: req.params.id }
 
     const category = await categoryService.update(request, user)
-    res
+    return res
       .status(200)
       .json(new SuccessResponse("Category successfully updated", category))
   } catch (error) {
@@ -35,7 +35,7 @@ const remove = async (req, res, next) => {
     const { id } = req.params
 
     const category = await categoryService.remove({ id }, user)
-    res
+    return res
       .status(200)
       .json(new SuccessResponse("Category successfully deleted", category))
   } catch (error) {
@@ -54,7 +54,7 @@ const getAll = async (req, res, next) => {
       { isDefault: false },
       user
     )
-    res.status(200).json(
+    return res.status(200).json(
       new SuccessResponse("Categories successfully retrieved", {
         defaultCategories,
         customCategories,
