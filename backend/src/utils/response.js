@@ -11,9 +11,10 @@ class SuccessResponse {
 }
 
 class ErrorResponse {
-  constructor(message, data = {}, errors = [], meta = {}) {
+  constructor(message, status = 500, errors = [], data = {}, meta = {}) {
     this.success = false
     this.message = message
+    this.status = status
     this.errors = errors
     this.data = data
     this.meta = {
