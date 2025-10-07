@@ -4,12 +4,14 @@ import errorMiddleware from "../middlewares/errorMiddleware.js"
 import { ErrorResponse } from "../utils/response.js"
 import transactionRouter from "./transactionRouter.js"
 import dashboardRouter from "./dashboardRouter.js"
+import reportRouter from "./reportRouter.js"
 
 const router = express.Router()
 
 router.use("/categories", categoryRouter)
 router.use("/transactions", transactionRouter)
 router.use("/dashboard", dashboardRouter)
+router.use("/report", reportRouter)
 
 router.all(/.*/, (req, res) =>
   res.status(404).json(new ErrorResponse("Route not found", 404))
