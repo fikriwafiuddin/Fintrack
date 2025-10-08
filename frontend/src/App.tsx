@@ -2,6 +2,9 @@ import { RouterProvider } from "react-router"
 import { useAuth } from "@clerk/clerk-react"
 import publicRoutes from "./routes/publicRoutes"
 import protectedRoutes from "./routes/protectedRoutes"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
+const queryClient = new QueryClient()
 
 function App() {
   const { userId, isLoaded } = useAuth()
@@ -16,7 +19,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={userId ? protectedRoutes : publicRoutes} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={userId ? protectedRoutes : publicRoutes} />
+      </QueryClientProvider>
     </>
   )
 }

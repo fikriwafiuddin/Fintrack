@@ -25,3 +25,12 @@ export interface TransactionFilter {
   endDate?: Date
   searchTerm?: string
 }
+
+export interface SuccessResponse<TData> {
+  success: boolean
+  message: string
+  data: TData
+  meta: {
+    timestamp: string
+  }
+}
