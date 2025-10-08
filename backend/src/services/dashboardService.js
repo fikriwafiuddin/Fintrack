@@ -75,6 +75,7 @@ const getSummary = async (request, user) => {
 
 const getRecentTransactions = async (user) => {
   const transactions = await Transaction.find({ user })
+    .populate("category", "name icon color")
     .sort({ date: 1 })
     .limit(5)
   return transactions
