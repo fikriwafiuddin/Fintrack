@@ -1,11 +1,10 @@
 import type { Category } from "@/types"
 import { Card, CardContent } from "./ui/card"
 import { Badge } from "./ui/badge"
-import { EditIcon, TagIcon, Trash2Icon } from "lucide-react"
+import { EditIcon, Loader2Icon, TagIcon, Trash2Icon } from "lucide-react"
 import { Button } from "./ui/button"
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -16,6 +15,7 @@ import {
 } from "./ui/alert-dialog"
 import { useState } from "react"
 import CategoryForm from "./CategoryForm"
+import { useRemoveCategory } from "@/services/hooks/categoryHook"
 
 interface CategoryCardProps {
   category: Category
@@ -49,9 +49,15 @@ const getTypeColor = (type: string) => {
 
 function CategoryCard({ category }: CategoryCardProps) {
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [removeCategory, setRemoveCategory] = useState(false)
+  const { mutate: remove, isPending: removing } = useRemoveCategory()
 
-  const handleDelete = (categoryId: string) => {
-    console.log("Deleting category with ID:", categoryId)
+  const handleDelete = () => {
+    remove(category._id, {
+      onSuccess: () => {
+        setRemoveCategory(false)
+      },
+    })
   }
   return (
     <Card key={category._id} className="hover:shadow-md transition-shadow">
@@ -93,7 +99,10 @@ function CategoryCard({ category }: CategoryCardProps) {
             )}
 
             {!category.isDefault && (
-              <AlertDialog>
+              <AlertDialog
+                onOpenChange={setRemoveCategory}
+                open={removeCategory}
+              >
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="outline"
@@ -113,12 +122,17 @@ function CategoryCard({ category }: CategoryCardProps) {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Batal</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={() => handleDelete(category._id)}
+                    <Button
+                      disabled={removing}
+                      onClick={() => handleDelete()}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      Hapus
-                    </AlertDialogAction>
+                      {removing ? (
+                        <Loader2Icon className="animate-spin" />
+                      ) : (
+                        "Delete"
+                      )}
+                    </Button>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>

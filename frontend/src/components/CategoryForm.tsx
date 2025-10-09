@@ -22,6 +22,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
+import {
+  useCreateCategory,
+  useUpdateCategory,
+} from "@/services/hooks/categoryHook"
+import { Loader2Icon } from "lucide-react"
+import type { CategoryFieldErrors, ErrorResponse } from "@/types/api"
+import type { AxiosError } from "axios"
 
 interface CategoryFormProps {
   category?: Category
@@ -63,9 +70,72 @@ function CategoryForm({ category, open, onOpenChange }: CategoryFormProps) {
       type: category?.type || "expense",
     },
   })
+  const { mutate: create, isPending: creating } = useCreateCategory()
+  const { mutate: update, isPending: updating } = useUpdateCategory()
 
   const onSubmit = async (data: FormData) => {
-    console.log(data)
+    if (category) {
+      update(
+        { id: category._id, data },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+            form.reset()
+          },
+          onError: (error) => {
+            const axiosError = error as AxiosError<
+              ErrorResponse<CategoryFieldErrors>
+            >
+
+            if (
+              axiosError.response &&
+              axiosError.response.status === 400 &&
+              axiosError.response.data?.errors
+            ) {
+              const fieldErrors = axiosError.response.data.errors
+
+              Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
+                if (messages && messages.length > 0) {
+                  form.setError(fieldName as keyof FormData, {
+                    type: "server",
+                    message: messages[0],
+                  })
+                }
+              })
+            }
+          },
+        }
+      )
+    } else {
+      create(data, {
+        onSuccess: () => {
+          onOpenChange(false)
+          form.reset()
+        },
+        onError: (error) => {
+          const axiosError = error as AxiosError<
+            ErrorResponse<CategoryFieldErrors>
+          >
+
+          if (
+            axiosError.response &&
+            axiosError.response.status === 400 &&
+            axiosError.response.data?.errors
+          ) {
+            const fieldErrors = axiosError.response.data.errors
+
+            Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
+              if (messages && messages.length > 0) {
+                form.setError(fieldName as keyof FormData, {
+                  type: "server",
+                  message: messages[0],
+                })
+              }
+            })
+          }
+        },
+      })
+    }
   }
 
   return (
@@ -156,8 +226,18 @@ function CategoryForm({ category, open, onOpenChange }: CategoryFormProps) {
             />
 
             <div className="flex space-x-2">
-              <Button type="submit" className="flex-1">
-                {category ? "Update Category" : "Add Category"}
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={creating || updating}
+              >
+                {creating || updating ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : category ? (
+                  "Update Category"
+                ) : (
+                  "Add Category"
+                )}
               </Button>
               <Button
                 type="button"
