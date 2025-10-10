@@ -2,13 +2,12 @@ import { z } from "zod"
 
 const add = z.object({
   type: z.enum(["expense", "income"], "Type is required"),
-  amount: z
-    .string()
-    .min(1, "Jumlah harus diisi")
-    .refine(
-      (val) => !isNaN(Number(val)) && Number(val) > 0,
-      "Jumlah harus berupa angka positif"
-    ),
+  amount: z.preprocess(
+    (val) => Number(val),
+    z
+      .number("Amount must be a number")
+      .positive("Amount must be a positive number")
+  ),
   category: z.string("Category is required"),
   date: z.date("Date is required"),
   notes: z.string().optional(),

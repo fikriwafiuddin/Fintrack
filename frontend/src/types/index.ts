@@ -24,6 +24,7 @@ export interface TransactionFilter {
   startDate?: Date
   endDate?: Date
   searchTerm?: string
+  sort: "asc" | "desc"
 }
 
 export interface SuccessResponse<TData> {

@@ -20,7 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import categories from "@/data/categories"
 import {
   Popover,
   PopoverContent,
@@ -29,32 +28,145 @@ import {
 import { format } from "date-fns"
 import { Button } from "./ui/button"
 import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Loader2Icon } from "lucide-react"
 import { Calendar } from "./ui/calendar"
 import { Textarea } from "./ui/textarea"
 import type { Transaction } from "@/types"
-import { z } from "zod"
+import {
+  useCreateTransaction,
+  useUpdateTransaction,
+} from "@/services/hooks/transactionHook"
+import type {
+  ErrorResponse,
+  FormDataTransaction,
+  TransactionFieldErrors,
+} from "@/types/api"
+import { useNavigate } from "react-router"
+import type { AxiosError } from "axios"
+import { useGetAllCategories } from "@/services/hooks/categoryHook"
+import { useMemo } from "react"
+import CategoryItemSkeleton from "./CategoryItemSkeleton"
 
 interface TransactionFormProps {
   transaction?: Transaction<string>
 }
-
-type FormData = z.infer<typeof transactionValidation.add>
 
 function TransactionForm({ transaction }: TransactionFormProps) {
   const form = useForm({
     resolver: zodResolver(transactionValidation.add),
     defaultValues: {
       type: transaction?.type || "expense",
-      amount: transaction?.amount.toString() || "",
+      amount: transaction?.amount || "",
       category: transaction?.category || "",
       date: transaction?.date || new Date(),
       notes: transaction?.notes || "",
     },
   })
+  const { mutate: create, isPending: creating } = useCreateTransaction()
+  const { mutate: update, isPending: updating } = useUpdateTransaction()
+  const { data: categoryData, isPending: isCategoriesLoading } =
+    useGetAllCategories()
+  const navigate = useNavigate()
 
-  const onSubmit = (data: FormData) => {
-    console.log(data)
+  // 🛑 BEST PRACTICE: Ambil nilai field 'type' saat ini dari form state
+  const currentType = form.watch("type")
+
+  // 🛑 TEKNIK OPTIMAL: Memoize dan Filter Kategori
+  const filteredCategories = useMemo(() => {
+    if (!categoryData) return []
+
+    // 1. Gabungkan customCategory dan defaultCategory
+    const allCategories = [
+      ...(categoryData.defaultCategories || []),
+      ...(categoryData.customCategories || []),
+    ]
+
+    // 2. Filter berdasarkan tipe transaksi (currentType)
+    return allCategories.filter((category) => {
+      // Jika tipe kategori adalah 'both', selalu tampilkan
+      if (category.type === "both") {
+        return true
+      }
+      // Tampilkan kategori jika tipenya cocok dengan tipe transaksi saat ini
+      return category.type === currentType
+    })
+  }, [categoryData, currentType]) // Dependensi: Hanya hitung ulang jika data kategori atau tipe transaksi berubah
+
+  // ... (onSubmit function)
+
+  // 🛑 BEST PRACTICE: Reset category field jika tipe berubah dan category yang dipilih hilang
+  // Ini mencegah submission dengan categoryId yang tidak valid
+  useMemo(() => {
+    // Periksa apakah category yang saat ini dipilih masih ada di daftar yang difilter
+    const currentCategoryId = form.getValues("category")
+    const categoryExists = filteredCategories.some(
+      (cat) => cat._id === currentCategoryId
+    )
+
+    if (currentCategoryId && !categoryExists) {
+      // Jika category sebelumnya tidak ada di daftar baru, reset nilai category
+      form.setValue("category", "", { shouldValidate: true })
+      form.trigger("category")
+    }
+  }, [filteredCategories, form])
+
+  const onSubmit = (data: FormDataTransaction) => {
+    if (transaction) {
+      update(
+        { id: transaction._id, data },
+        {
+          onSuccess: () => navigate("/transactions"),
+          onError: (error) => {
+            const axiosError = error as AxiosError<
+              ErrorResponse<TransactionFieldErrors>
+            >
+
+            if (
+              axiosError.response &&
+              axiosError.response.status === 400 &&
+              axiosError.response.data?.errors
+            ) {
+              const fieldErrors = axiosError.response.data.errors
+
+              Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
+                if (messages && messages.length > 0) {
+                  form.setError(fieldName as keyof FormDataTransaction, {
+                    type: "server",
+                    message: messages[0],
+                  })
+                }
+              })
+            }
+          },
+        }
+      )
+    } else {
+      create(data, {
+        onSuccess: () => navigate("/transactions"),
+        onError: (error) => {
+          const axiosError = error as AxiosError<
+            ErrorResponse<TransactionFieldErrors>
+          >
+
+          if (
+            axiosError.response &&
+            axiosError.response.status === 400 &&
+            axiosError.response.data?.errors
+          ) {
+            const fieldErrors = axiosError.response.data.errors
+
+            Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
+              if (messages && messages.length > 0) {
+                form.setError(fieldName as keyof FormDataTransaction, {
+                  type: "server",
+                  message: messages[0],
+                })
+              }
+            })
+          }
+        },
+      })
+    }
   }
 
   return (
@@ -104,8 +216,12 @@ function TransactionForm({ transaction }: TransactionFormProps) {
                     <Input
                       placeholder="0"
                       type="number"
-                      step="0.01"
                       {...field}
+                      value={
+                        field.value === undefined || field.value === null
+                          ? ""
+                          : String(field.value)
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -129,17 +245,21 @@ function TransactionForm({ transaction }: TransactionFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {categories.map((category) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          <div className="flex items-center space-x-2">
-                            <div
-                              className="w-3 h-3 rounded-full"
-                              style={{ backgroundColor: category.color }}
-                            />
-                            <span>{category.name}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
+                      {isCategoriesLoading ? (
+                        <CategoryItemSkeleton />
+                      ) : (
+                        filteredCategories.map((category) => (
+                          <SelectItem key={category._id} value={category._id}>
+                            <div className="flex items-center space-x-2">
+                              <div
+                                className="w-3 h-3 rounded-full"
+                                style={{ backgroundColor: category.color }}
+                              />
+                              <span>{category.name}</span>
+                            </div>
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -206,8 +326,18 @@ function TransactionForm({ transaction }: TransactionFormProps) {
               )}
             />
 
-            <Button className="w-full" type="submit">
-              {transaction ? "Update Transaction" : "Add Transaction"}
+            <Button
+              disabled={creating || updating}
+              className="w-full"
+              type="submit"
+            >
+              {creating || updating ? (
+                <Loader2Icon className="animate-spin" />
+              ) : transaction ? (
+                "Update Transaction"
+              ) : (
+                "Add Transaction"
+              )}
             </Button>
           </form>
         </Form>

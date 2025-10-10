@@ -3,11 +3,9 @@ import type { TransactionFilter } from "@/types"
 import {
   ArrowUpDownIcon,
   CalendarIcon,
-  EditIcon,
   FilterIcon,
   PlusIcon,
   SearchIcon,
-  Trash2Icon,
 } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"
@@ -20,33 +18,49 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import categories from "@/data/categories"
-import transactions from "@/data/transactions"
-import { format } from "date-fns"
-import TransactionForm from "@/components/TransactionForm"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { getContrastColor } from "@/lib/utils"
+import { useGetAllTransactions } from "@/services/hooks/transactionHook"
+import { useGetAllCategories } from "@/services/hooks/categoryHook"
+import { Skeleton } from "@/components/ui/skeleton"
+import TransactionCard from "@/components/TransactionCard"
+
+const CategoryItemSkeleton = () =>
+  [...Array(6)].map((_, index) => (
+    <div
+      key={index}
+      className="flex items-center space-x-2 p-2 mx-1 my-1 h-8 rounded-sm animate-pulse"
+    >
+      <div className="w-3 h-3 rounded-full bg-muted-foreground/30" />
+      <div className="h-3 w-20 bg-muted-foreground/30 rounded" />
+    </div>
+  ))
+
+const TransactionRowSkeleton = () => (
+  <div className="flex items-center justify-between p-4 rounded-lg border border-border">
+    <div className="flex items-center space-x-4">
+      <Skeleton className="w-10 h-10 rounded-full" />
+      <div>
+        <Skeleton className="h-4 w-28 mb-1" />
+        <Skeleton className="h-3 w-20" />
+      </div>
+    </div>
+    <Skeleton className="h-5 w-24" />
+  </div>
+)
 
 function TransactionsPage() {
-  const [filter, setFilter] = useState<TransactionFilter>({})
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
+  const [filter, setFilter] = useState<TransactionFilter>({
+    sort: "asc",
+  } as TransactionFilter)
+  const { data: transactionData, isPending: isTransactionsLoading } =
+    useGetAllTransactions(filter)
+  const { data: categoryData, isPending: isCategoriesLoading } =
+    useGetAllCategories()
+
+  const transactions = transactionData || []
+  const allCategories = [
+    ...(categoryData?.defaultCategories || []),
+    ...(categoryData?.customCategories || []),
+  ]
 
   const handleFilterChange = (key: keyof TransactionFilter, value: string) => {
     setFilter((prev) => ({
@@ -55,9 +69,11 @@ function TransactionsPage() {
     }))
   }
 
-  const handleDelete = (transactionId: string) => {
-    console.log(transactionId)
-    // deleteTransaction(transactionId);
+  const handleSortOrder = (value: "asc" | "desc") => {
+    setFilter((prev) => ({
+      ...prev,
+      sort: value,
+    }))
   }
 
   return (
@@ -128,17 +144,21 @@ function TransactionsPage() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Category</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category._id} value={category._id}>
-                    <div className="flex items-center space-x-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: category.color }}
-                      />
-                      <span>{category.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
+                {isCategoriesLoading ? (
+                  <CategoryItemSkeleton />
+                ) : (
+                  allCategories.map((category) => (
+                    <SelectItem key={category._id} value={category._id}>
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: category.color }}
+                        />
+                        <span>{category.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
 
@@ -146,12 +166,12 @@ function TransactionsPage() {
             <Button
               variant="outline"
               onClick={() =>
-                setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+                handleSortOrder(filter.sort === "asc" ? "desc" : "asc")
               }
               className="justify-start"
             >
               <ArrowUpDownIcon className="mr-2 h-4 w-4" />
-              {sortOrder === "desc" ? "Latest" : "Oldest"}
+              {filter.sort === "desc" ? "Latest" : "Oldest"}
             </Button>
           </div>
         </CardContent>
@@ -163,7 +183,14 @@ function TransactionsPage() {
           <CardTitle>Transaction List ({transactions.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          {transactions.length === 0 ? (
+          {isTransactionsLoading && (
+            <div className="space-y-2">
+              <TransactionRowSkeleton />
+              <TransactionRowSkeleton />
+              <TransactionRowSkeleton />
+            </div>
+          )}
+          {!isTransactionsLoading && transactions.length === 0 ? (
             <div className="text-center py-8">
               <CalendarIcon className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-muted-foreground">
@@ -179,119 +206,9 @@ function TransactionsPage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {transactions.map((transaction) => {
-                return (
-                  <div
-                    key={transaction._id}
-                    className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent/50 transition-colors"
-                  >
-                    <div className="flex items-center space-x-4 flex-1">
-                      <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium"
-                        style={{
-                          backgroundColor: transaction.category.color,
-                          color: getContrastColor(transaction.category.color),
-                        }}
-                      >
-                        {transaction.category.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">
-                              {transaction.category.name}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {format(
-                                new Date(transaction.date),
-                                "dd MMMM yyyy"
-                              )}
-                            </p>
-                            {transaction.notes && (
-                              <p className="text-xs text-muted-foreground mt-1 max-w-xs truncate">
-                                {transaction.notes}
-                              </p>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <p
-                              className={`font-bold text-lg ${
-                                transaction.type === "income"
-                                  ? "text-green-600 dark:text-green-400"
-                                  : "text-red-600 dark:text-red-400"
-                              }`}
-                            >
-                              {transaction.type === "income" ? "+" : "-"}
-                              Rp {transaction.amount.toLocaleString("id-ID")}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {transaction.type === "income"
-                                ? "Income"
-                                : "Expense"}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center space-x-2 ml-4">
-                      {/* Edit Dialog */}
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            <EditIcon className="h-4 w-4" />
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle>Edit Transaction</DialogTitle>
-                          </DialogHeader>
-                          <TransactionForm
-                            transaction={{
-                              ...transaction,
-                              category: transaction.category._id,
-                            }}
-                          />
-                        </DialogContent>
-                      </Dialog>
-
-                      {/* Delete Alert */}
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2Icon className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Delete Transaction
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to delete this transaction?
-                              This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(transaction._id)}
-                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </div>
-                )
-              })}
+              {transactions.map((transaction) => (
+                <TransactionCard transaction={transaction} />
+              ))}
             </div>
           )}
         </CardContent>
