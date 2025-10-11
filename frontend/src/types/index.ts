@@ -1,3 +1,26 @@
+import type categoryValidation from "@/lib/validations/category-validation"
+import type transactionValidation from "@/lib/validations/transaction-validation"
+import { z } from "zod"
+
+// Type success response from API
+export interface SuccessResponse<TData> {
+  success: boolean
+  message: string
+  data: TData
+  meta: {
+    timestamp: string
+  }
+}
+
+// Type error response from API
+export interface ErrorResponse<TErrors = Record<string, unknown>> {
+  success: false
+  message: string
+  errors: TErrors | Record<string, unknown>
+  data: object
+  meta: { timestamp: string }
+}
+
 export type Category = {
   _id: string
   user?: string
@@ -18,6 +41,14 @@ export type Transaction<TCategory> = {
   notes?: string
 }
 
+export type BreakdownCategoryItem = {
+  _id: number
+  name: string
+  color: string
+  amount: number
+  percentage: number
+}
+
 export interface TransactionFilter {
   categoryId?: string
   type?: "income" | "expense"
@@ -27,19 +58,19 @@ export interface TransactionFilter {
   sort: "asc" | "desc"
 }
 
-export interface SuccessResponse<TData> {
-  success: boolean
-  message: string
-  data: TData
-  meta: {
-    timestamp: string
-  }
+export interface CategoryFieldErrors {
+  name?: string[]
+  type?: string[]
+  color?: string[]
 }
 
-export type BreakdownCategoryItem = {
-  _id: number
-  name: string
-  color: string
-  amount: number
-  percentage: number
+export interface TransactionFieldErrors {
+  type?: string[]
+  amount?: string[]
+  category?: string[]
+  date?: string[]
+  notes?: string[]
 }
+
+export type FormDataTransaction = z.infer<typeof transactionValidation.add>
+type FormDataCategory = z.infer<typeof categoryValidation.add>

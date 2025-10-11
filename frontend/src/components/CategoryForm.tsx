@@ -1,9 +1,7 @@
 import categoryValidation from "@/lib/validations/category-validation"
-import type { Category } from "@/types"
-import type { z } from "zod"
+import type { Category, CategoryFieldErrors, ErrorResponse } from "@/types"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -27,16 +25,14 @@ import {
   useUpdateCategory,
 } from "@/services/hooks/categoryHook"
 import { Loader2Icon } from "lucide-react"
-import type { CategoryFieldErrors, ErrorResponse } from "@/types/api"
 import type { AxiosError } from "axios"
+import type { FormDataCategory } from "@/services/api/categoryApi"
 
 interface CategoryFormProps {
   category?: Category
   open: boolean
   onOpenChange: (open: boolean) => void
 }
-
-type FormData = z.infer<typeof categoryValidation.add>
 
 const colorOptions = [
   "#ff6b6b",
@@ -62,7 +58,7 @@ const colorOptions = [
 ]
 
 function CategoryForm({ category, open, onOpenChange }: CategoryFormProps) {
-  const form = useForm<FormData>({
+  const form = useForm<FormDataCategory>({
     resolver: zodResolver(categoryValidation.add),
     defaultValues: {
       name: category?.name || "",
@@ -73,7 +69,7 @@ function CategoryForm({ category, open, onOpenChange }: CategoryFormProps) {
   const { mutate: create, isPending: creating } = useCreateCategory()
   const { mutate: update, isPending: updating } = useUpdateCategory()
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: FormDataCategory) => {
     if (category) {
       update(
         { id: category._id, data },
@@ -96,7 +92,7 @@ function CategoryForm({ category, open, onOpenChange }: CategoryFormProps) {
 
               Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
                 if (messages && messages.length > 0) {
-                  form.setError(fieldName as keyof FormData, {
+                  form.setError(fieldName as keyof FormDataCategory, {
                     type: "server",
                     message: messages[0],
                   })
@@ -126,7 +122,7 @@ function CategoryForm({ category, open, onOpenChange }: CategoryFormProps) {
 
             Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
               if (messages && messages.length > 0) {
-                form.setError(fieldName as keyof FormData, {
+                form.setError(fieldName as keyof FormDataCategory, {
                   type: "server",
                   message: messages[0],
                 })

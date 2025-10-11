@@ -2,20 +2,12 @@ import CategoryCard from "@/components/CategoryCard"
 import CategoryForm from "@/components/CategoryForm"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert" // Untuk Error
-import { Skeleton } from "@/components/ui/skeleton" // Untuk Loading
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Skeleton } from "@/components/ui/skeleton"
 import { useGetAllCategories } from "@/services/hooks/categoryHook"
-import type { Category } from "@/types"
 import { PaletteIcon, PlusIcon, AlertTriangle } from "lucide-react"
 import { useState } from "react"
 
-// Tipe data hasil seleksi (sesuai yang di-export dari hook)
-interface CategorizedData {
-  defaultCategories: Category[]
-  customCategories: Category[]
-}
-
-// Komponen Skeleton untuk satu baris kategori (meniru grid)
 const CategoryGridSkeleton = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -31,21 +23,11 @@ const CategoryGridSkeleton = () => (
 
 function CategoriesPage() {
   const [isAddingCategory, setIsAddingCategory] = useState(false)
+  const { data, isPending, isError, error } = useGetAllCategories()
 
-  // Gunakan generic type pada useGetAllCategories untuk type safety
-  const { data, isPending, isError, error } = useGetAllCategories() as {
-    // Type Assertion sementara untuk menggunakan data
-    data: CategorizedData | undefined
-    isPending: boolean
-    isError: boolean
-    error: unknown
-  }
-
-  // Data yang aman, default ke array kosong saat loading/error
   const defaultCategories = data?.defaultCategories || []
   const customCategories = data?.customCategories || []
 
-  // --- 1. Penanganan Loading (Early Return) ---
   if (isPending) {
     return (
       <div className="space-y-6">
@@ -67,9 +49,7 @@ function CategoriesPage() {
     )
   }
 
-  // --- 2. Penanganan Error (Early Return) ---
   if (isError) {
-    // Best Practice: tampilkan error card yang jelas
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error."
 
@@ -102,7 +82,6 @@ function CategoriesPage() {
     )
   }
 
-  // --- 3. Tampilkan Data (Success State) ---
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -143,7 +122,7 @@ function CategoriesPage() {
           ))}
         </div>
 
-        {/* Empty State untuk Custom Categories */}
+        {/* Empty State for Custom Categories */}
         {customCategories.length === 0 && (
           <Card>
             <CardContent className="text-center py-8">

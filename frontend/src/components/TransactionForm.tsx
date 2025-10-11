@@ -31,16 +31,16 @@ import { cn } from "@/lib/utils"
 import { CalendarIcon, Loader2Icon } from "lucide-react"
 import { Calendar } from "./ui/calendar"
 import { Textarea } from "./ui/textarea"
-import type { Transaction } from "@/types"
+import type {
+  ErrorResponse,
+  FormDataTransaction,
+  Transaction,
+  TransactionFieldErrors,
+} from "@/types"
 import {
   useCreateTransaction,
   useUpdateTransaction,
 } from "@/services/hooks/transactionHook"
-import type {
-  ErrorResponse,
-  FormDataTransaction,
-  TransactionFieldErrors,
-} from "@/types/api"
 import { useNavigate } from "react-router"
 import type { AxiosError } from "axios"
 import { useGetAllCategories } from "@/services/hooks/categoryHook"
@@ -68,43 +68,31 @@ function TransactionForm({ transaction }: TransactionFormProps) {
     useGetAllCategories()
   const navigate = useNavigate()
 
-  // 🛑 BEST PRACTICE: Ambil nilai field 'type' saat ini dari form state
   const currentType = form.watch("type")
 
-  // 🛑 TEKNIK OPTIMAL: Memoize dan Filter Kategori
   const filteredCategories = useMemo(() => {
     if (!categoryData) return []
 
-    // 1. Gabungkan customCategory dan defaultCategory
     const allCategories = [
       ...(categoryData.defaultCategories || []),
       ...(categoryData.customCategories || []),
     ]
 
-    // 2. Filter berdasarkan tipe transaksi (currentType)
     return allCategories.filter((category) => {
-      // Jika tipe kategori adalah 'both', selalu tampilkan
       if (category.type === "both") {
         return true
       }
-      // Tampilkan kategori jika tipenya cocok dengan tipe transaksi saat ini
       return category.type === currentType
     })
-  }, [categoryData, currentType]) // Dependensi: Hanya hitung ulang jika data kategori atau tipe transaksi berubah
+  }, [categoryData, currentType])
 
-  // ... (onSubmit function)
-
-  // 🛑 BEST PRACTICE: Reset category field jika tipe berubah dan category yang dipilih hilang
-  // Ini mencegah submission dengan categoryId yang tidak valid
   useMemo(() => {
-    // Periksa apakah category yang saat ini dipilih masih ada di daftar yang difilter
     const currentCategoryId = form.getValues("category")
     const categoryExists = filteredCategories.some(
       (cat) => cat._id === currentCategoryId
     )
 
     if (currentCategoryId && !categoryExists) {
-      // Jika category sebelumnya tidak ada di daftar baru, reset nilai category
       form.setValue("category", "", { shouldValidate: true })
       form.trigger("category")
     }

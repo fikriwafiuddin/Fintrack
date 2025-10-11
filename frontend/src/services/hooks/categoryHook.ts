@@ -1,10 +1,18 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import categoryApi, { type FormDataCategory } from "../api/categoryApi"
-import type { Category, SuccessResponse } from "@/types"
+import type {
+  Category,
+  CategoryFieldErrors,
+  ErrorResponse,
+  SuccessResponse,
+} from "@/types"
 import { toast } from "sonner"
 import type { AxiosError } from "axios"
-import type { CategoryFieldErrors, ErrorResponse } from "@/types/api"
+
+const queryKeyCategories = (options: object = {}) => {
+  return ["categories", options]
+}
 
 export const useCreateCategory = () => {
   const { getToken } = useAuth()
@@ -23,7 +31,7 @@ export const useCreateCategory = () => {
       return await categoryApi.create(data, token)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] })
+      queryClient.invalidateQueries({ queryKey: queryKeyCategories() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -63,7 +71,7 @@ export const useUpdateCategory = () => {
       return await categoryApi.update(id, data, token)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] })
+      queryClient.invalidateQueries({ queryKey: queryKeyCategories() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -97,7 +105,7 @@ export const useRemoveCategory = () => {
       return await categoryApi.remove(id, token)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] })
+      queryClient.invalidateQueries({ queryKey: queryKeyCategories() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -117,8 +125,15 @@ export const useRemoveCategory = () => {
 export const useGetAllCategories = () => {
   const { getToken } = useAuth()
 
-  return useQuery({
-    queryKey: ["categories"],
+  return useQuery<
+    SuccessResponse<{
+      defaultCategories: Category[]
+      customCategories: Category[]
+    }>,
+    ErrorResponse,
+    { defaultCategories: Category[]; customCategories: Category[] }
+  >({
+    queryKey: queryKeyCategories(),
     queryFn: async () => {
       const token = await getToken()
       if (!token) {
@@ -126,12 +141,7 @@ export const useGetAllCategories = () => {
       }
       return await categoryApi.getAll(token)
     },
-    select: (
-      data: SuccessResponse<{
-        defaultCategories: Category[]
-        customCategories: Category[]
-      }>
-    ) => {
+    select: (data) => {
       return data.data
     },
   })

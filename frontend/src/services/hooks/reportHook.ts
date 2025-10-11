@@ -1,9 +1,12 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useQuery } from "@tanstack/react-query"
 import reportApi from "../api/reportApi"
-import type { BreakdownCategoryItem, SuccessResponse } from "@/types"
+import type {
+  BreakdownCategoryItem,
+  ErrorResponse,
+  SuccessResponse,
+} from "@/types"
 import type { AxiosError } from "axios"
-import type { ErrorResponse } from "@/types/api"
 
 export interface MonthsSummary {
   month: string

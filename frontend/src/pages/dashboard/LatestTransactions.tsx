@@ -1,24 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CalendarIcon, AlertTriangle } from "lucide-react"
-import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { useGetRecentTransactions } from "@/services/hooks/dashboardHook"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Link } from "react-router"
-
-const TransactionRowSkeleton = () => (
-  <div className="flex items-center justify-between p-4 rounded-lg border border-border">
-    <div className="flex items-center space-x-4">
-      <Skeleton className="w-10 h-10 rounded-full" />
-      <div>
-        <Skeleton className="h-4 w-28 mb-1" />
-        <Skeleton className="h-3 w-20" />
-      </div>
-    </div>
-    <Skeleton className="h-5 w-24" />
-  </div>
-)
+import TransactionCard from "@/components/TransactionCard"
+import TransactionRowSkeleton from "@/components/TransactionRowSkeleton"
 
 function LatestTransactions() {
   const {
@@ -120,49 +107,7 @@ function LatestTransactions() {
       <CardContent>
         <div className="space-y-4">
           {recentTransactionsData.map((transaction) => (
-            <div
-              key={transaction._id}
-              className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-accent/50 transition-colors"
-            >
-              <div className="flex items-center space-x-4">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium"
-                  style={{
-                    backgroundColor: transaction.category?.color || "#cccccc",
-                  }}
-                >
-                  {transaction.category?.name.charAt(0).toUpperCase() || "?"}
-                </div>
-                <div>
-                  <p className="font-medium">
-                    {transaction.category?.name || "Unknown"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(transaction.date), "dd MMM yyyy")}
-                  </p>
-                  {transaction.notes && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {transaction.notes}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="text-right">
-                <p
-                  className={`font-bold ${
-                    transaction.type === "income"
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-red-600 dark:text-red-400"
-                  }`}
-                >
-                  {transaction.type === "income" ? "+" : "-"}
-                  Rp {transaction.amount.toLocaleString("id-ID")}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {transaction.type === "income" ? "Income" : "Expenses"}
-                </p>
-              </div>
-            </div>
+            <TransactionCard transaction={transaction} />
           ))}
         </div>
       </CardContent>

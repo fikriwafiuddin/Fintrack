@@ -1,19 +1,21 @@
 import type {
   Category,
+  ErrorResponse,
+  FormDataTransaction,
   SuccessResponse,
   Transaction,
+  TransactionFieldErrors,
   TransactionFilter,
 } from "@/types"
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import transactionApi from "../api/transactionApi"
 import type { AxiosError } from "axios"
-import type {
-  ErrorResponse,
-  FormDataTransaction,
-  TransactionFieldErrors,
-} from "@/types/api"
 import { toast } from "sonner"
+
+const queryKeyTransactions = (options: object = {}) => {
+  return ["transactions", options]
+}
 
 export const useCreateTransaction = () => {
   const { getToken } = useAuth()
@@ -32,7 +34,7 @@ export const useCreateTransaction = () => {
       return await transactionApi.create(data, token)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] })
+      queryClient.invalidateQueries({ queryKey: queryKeyTransactions() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -66,7 +68,7 @@ export const useUpdateTransaction = () => {
       return await transactionApi.update(id, data, token)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] })
+      queryClient.invalidateQueries({ queryKey: queryKeyTransactions() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -100,7 +102,7 @@ export const useRemoveTransaction = () => {
       return await transactionApi.remove(id, token)
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] })
+      queryClient.invalidateQueries({ queryKey: queryKeyTransactions() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -120,8 +122,12 @@ export const useRemoveTransaction = () => {
 export const useGetAllTransactions = (request: TransactionFilter) => {
   const { getToken } = useAuth()
 
-  return useQuery({
-    queryKey: ["transactions", request],
+  return useQuery<
+    SuccessResponse<{ transactions: Transaction<Category>[] }>,
+    ErrorResponse,
+    Transaction<Category>[]
+  >({
+    queryKey: queryKeyTransactions(request),
     queryFn: async () => {
       const token = await getToken()
       if (!token) {
@@ -129,9 +135,7 @@ export const useGetAllTransactions = (request: TransactionFilter) => {
       }
       return await transactionApi.getAll(request, token)
     },
-    select: (
-      data: SuccessResponse<{ transactions: Transaction<Category>[] }>
-    ) => {
+    select: (data) => {
       return data.data.transactions
     },
     staleTime: 5 * 60 * 1000,
