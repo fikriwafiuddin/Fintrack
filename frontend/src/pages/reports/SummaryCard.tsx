@@ -5,8 +5,8 @@ type SummaryCardProps = {
   summaryData: {
     totalIncome: number
     totalExpense: number
-    balance: number
-    transactions: number
+    difference: number
+    totalTransactions: number
   }
 }
 
@@ -50,29 +50,29 @@ function SummaryCard({ summaryData }: SummaryCardProps) {
           <div className="flex items-center space-x-2">
             <div
               className={`p-2 rounded-full ${
-                summaryData.balance >= 0
+                summaryData.difference >= 0
                   ? "bg-blue-100 dark:bg-blue-900"
                   : "bg-orange-100 dark:bg-orange-900"
               }`}
             >
               <TrendingUpIcon
                 className={`h-6 w-6 ${
-                  summaryData.balance >= 0
+                  summaryData.difference >= 0
                     ? "text-blue-600 dark:text-blue-400"
                     : "text-orange-600 dark:text-orange-400"
                 }`}
               />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Difference</p>
+              <p className="text-sm text-muted-foreground">difference</p>
               <p
                 className={`text-2xl font-bold ${
-                  summaryData.balance >= 0
+                  summaryData.difference >= 0
                     ? "text-blue-600 dark:text-blue-400"
                     : "text-orange-600 dark:text-orange-400"
                 }`}
               >
-                Rp {Math.abs(summaryData.balance).toLocaleString("id-ID")}
+                Rp {Math.abs(summaryData.difference).toLocaleString("id-ID")}
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ function SummaryCard({ summaryData }: SummaryCardProps) {
             <div>
               <p className="text-sm text-muted-foreground">Transaction</p>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {summaryData.transactions}
+                {summaryData.totalTransactions}
               </p>
             </div>
           </div>

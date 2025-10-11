@@ -1,20 +1,16 @@
-import { DownloadIcon } from "lucide-react"
+import { AlertTriangleIcon, DownloadIcon } from "lucide-react"
 import { useState } from "react"
-
 import { Button } from "@/components/ui/button"
-import CategoryBreakDown from "./CategoryBreakDown"
+import CategoryBreakDown, {
+  CategoryBreakDownError,
+  CategoryBreakDownSkeleton,
+} from "./CategoryBreakDown"
 import MonthlyComparison from "./MonthlyComparison"
 import SummaryCard from "./SummaryCard"
 import ReportDateControls from "./ReportDateControls"
-
-const summaryData = {
-  month: 0,
-  year: 2024,
-  totalIncome: 5000000,
-  totalExpense: 3000000,
-  balance: 2000000,
-  transactions: 20,
-}
+import { useGetSummary } from "@/services/hooks/reportHook"
+import StatCardSkeleton from "@/components/StatCardSkeleton"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 const monthNames = [
   "January",
@@ -31,72 +27,14 @@ const monthNames = [
   "December",
 ]
 
-const expenseBreakdown = [
-  {
-    categoryId: 1,
-    categoryName: "Makanan",
-    color: "#FF6B6B",
-    amount: 80000,
-    percentage: 20.51,
-  },
-  {
-    categoryId: 2,
-    categoryName: "Transportasi",
-    color: "#4ECDC4",
-    amount: 45000,
-    percentage: 11.54,
-  },
-  {
-    categoryId: 3,
-    categoryName: "Hiburan",
-    color: "#FFD93D",
-    amount: 100000,
-    percentage: 25.64,
-  },
-  {
-    categoryId: 4,
-    categoryName: "Tagihan",
-    color: "#1A535C",
-    amount: 150000,
-    percentage: 38.31,
-  },
-]
-
-const incomeBreakdown = [
-  {
-    categoryId: 1,
-    categoryName: "Makanan",
-    color: "#FF6B6B",
-    amount: 80000,
-    percentage: 20.51,
-  },
-  {
-    categoryId: 2,
-    categoryName: "Transportasi",
-    color: "#4ECDC4",
-    amount: 45000,
-    percentage: 11.54,
-  },
-  {
-    categoryId: 3,
-    categoryName: "Hiburan",
-    color: "#FFD93D",
-    amount: 100000,
-    percentage: 25.64,
-  },
-  {
-    categoryId: 4,
-    categoryName: "Tagihan",
-    color: "#1A535C",
-    amount: 150000,
-    percentage: 38.31,
-  },
-]
-
 function ReportsPage() {
   const currentDate = new Date()
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth())
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear())
+  const { data, isPending, isError, error } = useGetSummary({
+    month: selectedMonth,
+    year: selectedYear,
+  })
 
   const handleExport = () => {
     console.log("export")
@@ -134,18 +72,47 @@ function ReportsPage() {
       </div>
 
       {/* Summary Cards */}
-      <SummaryCard summaryData={summaryData} />
+      {isPending && !data ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+        </div>
+      ) : isError ? (
+        <Alert variant="destructive">
+          <AlertTriangleIcon className="h-4 w-4" />
+          <AlertTitle>Failed to Load Data</AlertTitle>
+          <AlertDescription>
+            An error occurred while retrieving today's summary. Please try
+            again.
+            <p className="mt-1 text-xs opacity-80">
+              {error instanceof Error ? error.message : "Unknown error."}
+            </p>
+          </AlertDescription>
+        </Alert>
+      ) : (
+        data && <SummaryCard summaryData={data} />
+      )}
 
       {/* Monthly Comparison Chart */}
       <MonthlyComparison />
 
       {/* Category Breakdown */}
-      <CategoryBreakDown
-        month={monthNames[selectedMonth]}
-        year={selectedYear}
-        incomeBreakdown={incomeBreakdown}
-        expenseBreakdown={expenseBreakdown}
-      />
+      {isPending && !data ? (
+        <CategoryBreakDownSkeleton />
+      ) : isError ? (
+        <CategoryBreakDownError />
+      ) : (
+        data && (
+          <CategoryBreakDown
+            month={monthNames[selectedMonth]}
+            year={selectedYear}
+            incomeBreakdown={data.incomeCategoryBreakdown || []}
+            expenseBreakdown={data.expenseCategoryBreakdown || []}
+          />
+        )
+      )}
     </div>
   )
 }

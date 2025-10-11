@@ -35,3 +35,11 @@ export interface SuccessResponse<TData> {
     timestamp: string
   }
 }
+
+export type BreakdownCategoryItem = {
+  _id: number
+  name: string
+  color: string
+  amount: number
+  percentage: number
+}

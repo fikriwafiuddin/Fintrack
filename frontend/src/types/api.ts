@@ -1,10 +1,10 @@
 import type transactionValidation from "@/lib/validations/transaction-validation"
 import { z } from "zod"
 
-export interface ErrorResponse<TErrors> {
+export interface ErrorResponse<TErrors = Record<string, unknown>> {
   success: false
   message: string
-  errors: TErrors
+  errors: TErrors | Record<string, unknown>
   data: object
   meta: { timestamp: string }
 }
