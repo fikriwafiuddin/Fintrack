@@ -179,7 +179,7 @@ function ReportDateControls({
       </div>
 
       {/* Divider */}
-      <div className="hidden sm:block w-px h-8 bg-gray-300" />
+      {/* <div className="hidden sm:block w-px h-8 bg-gray-300" /> */}
     </>
   )
 }

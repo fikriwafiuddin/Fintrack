@@ -1,6 +1,5 @@
-import { AlertTriangleIcon, DownloadIcon } from "lucide-react"
+import { AlertTriangleIcon } from "lucide-react"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import CategoryBreakDown, {
   CategoryBreakDownError,
   CategoryBreakDownSkeleton,
@@ -36,9 +35,9 @@ function ReportsPage() {
     year: selectedYear,
   })
 
-  const handleExport = () => {
-    console.log("export")
-  }
+  // const handleExport = () => {
+  //   console.log("export")
+  // }
 
   return (
     <div className="space-y-8">
@@ -64,10 +63,10 @@ function ReportsPage() {
           />
 
           {/* Export Button */}
-          <Button variant="outline" onClick={handleExport}>
+          {/* <Button variant="outline" onClick={handleExport}>
             <DownloadIcon className="mr-2 h-4 w-4" />
             Ekspor
-          </Button>
+          </Button> */}
         </div>
       </div>
 

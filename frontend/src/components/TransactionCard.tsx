@@ -134,7 +134,7 @@ function TransactionCard({ transaction }: TransactionCardProps) {
               <Button
                 disabled={removing}
                 onClick={handleDelete}
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                variant="destructive"
               >
                 {removing ? <Loader2Icon className="animate-spin" /> : "Delete"}
               </Button>

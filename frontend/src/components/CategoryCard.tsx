@@ -114,18 +114,18 @@ function CategoryCard({ category }: CategoryCardProps) {
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Hapus Kategori</AlertDialogTitle>
+                    <AlertDialogTitle>Delete Category</AlertDialogTitle>
                     <AlertDialogDescription>
-                      Apakah Anda yakin ingin menghapus kategori "
-                      {category.name}"? Tindakan ini tidak dapat dibatalkan.
+                      Are you sure you want to delete the category "
+                      {category.name}"? This action cannot be undone.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <Button
+                      variant="destructive"
                       disabled={removing}
                       onClick={() => handleDelete()}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
                       {removing ? (
                         <Loader2Icon className="animate-spin" />

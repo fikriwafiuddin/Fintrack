@@ -5,7 +5,6 @@ import {
   CalendarIcon,
   FilterIcon,
   PlusIcon,
-  SearchIcon,
 } from "lucide-react"
 import { useState } from "react"
 import { Link } from "react-router"
@@ -17,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Input } from "@/components/ui/input"
 import { useGetAllTransactions } from "@/services/hooks/transactionHook"
 import { useGetAllCategories } from "@/services/hooks/categoryHook"
 import TransactionCard from "@/components/TransactionCard"
@@ -88,13 +86,14 @@ function TransactionsPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FilterIcon className="h-5 w-5" />
-            Filter & Search
+            {/* Filter & Search */}
+            Filter
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {/* Search */}
-            <div className="relative">
+            {/* <div className="relative">
               <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
                 placeholder="Search for transactions..."
@@ -104,7 +103,7 @@ function TransactionsPage() {
                 }
                 className="pl-10"
               />
-            </div>
+            </div> */}
 
             {/* Type Filter */}
             <Select
