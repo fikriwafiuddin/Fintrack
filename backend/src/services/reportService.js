@@ -30,13 +30,39 @@ const getSummaryValidation = z.object({
 })
 
 const getSummary = async (request, user) => {
-  console.log(request)
   const { month, year } = validation(getSummaryValidation, request)
 
-  const categorySummary = await CategorySummary.find({ month, year, user })
+  const categorySummary = await CategorySummary.find({
+    month,
+    year,
+    user,
+  }).populate("categories.category", "name color")
 
   const expenseSummary = categorySummary.find((val) => val.type === "expense")
   const incomeSummary = categorySummary.find((val) => val.type === "income")
+
+  const expenseCategoryBreakdown = expenseSummary?.categories.map(
+    (element, index, arr) => {
+      return (arr[index] = {
+        _id: element.category._id,
+        name: element.category.name,
+        color: element.category.color,
+        amount: element.amount,
+        percentage: (element.amount / expenseSummary.totalAmount) * 100,
+      })
+    }
+  )
+  const incomeCategoryBreakdown = incomeSummary?.categories.map(
+    (element, index, arr) => {
+      return (arr[index] = {
+        _id: element.category._id,
+        name: element.category.name,
+        color: element.category.color,
+        amount: element.amount,
+        percentage: (element.amount / incomeSummary.totalAmount) * 100,
+      })
+    }
+  )
 
   const startDate = new Date(year, Number(month), 1)
   const endDate = new Date(year, Number(month) + 1, 1)
@@ -52,8 +78,8 @@ const getSummary = async (request, user) => {
     difference:
       (incomeSummary?.totalIncome || 0) - (expenseSummary?.totalAmount || 0),
     totalTransactions,
-    expenseCategoryBreakdown: expenseSummary?.categories || [],
-    incomeCategoryBreakdown: incomeSummary?.categories || [],
+    expenseCategoryBreakdown: expenseCategoryBreakdown || [],
+    incomeCategoryBreakdown: incomeCategoryBreakdown || [],
   }
 }
 
