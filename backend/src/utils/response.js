@@ -11,7 +11,7 @@ class SuccessResponse {
 }
 
 class ErrorResponse {
-  constructor(message, status = 500, errors = [], data = {}, meta = {}) {
+  constructor(message, status = 500, errors = {}, data = {}, meta = {}) {
     this.success = false
     this.message = message
     this.status = status

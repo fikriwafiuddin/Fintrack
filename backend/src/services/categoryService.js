@@ -9,9 +9,9 @@ const create = async (request, user) => {
   // 1. Check if custom category already exists
   const category = await Category.findOne({ name, user })
   if (category) {
-    throw new ErrorResponse("Category already exists", 400, [
-      { name: ["Category already exists"] },
-    ])
+    throw new ErrorResponse("Category already exists", 400, {
+      name: ["Category already exists"],
+    })
   }
 
   // 2. Check if default category already exists
@@ -19,9 +19,9 @@ const create = async (request, user) => {
     name,
   })
   if (defaultCategory) {
-    throw new ErrorResponse("Category already exists", 400, [
-      { name: ["Category already exists"] },
-    ])
+    throw new ErrorResponse("Category already exists", 400, {
+      name: ["Category already exists"],
+    })
   }
 
   // 3. Create category
@@ -44,9 +44,9 @@ const update = async (request, user) => {
   // 2. Check if custom category name is taken
   const categoryName = await Category.findOne({ name, user, _id: { $ne: id } })
   if (categoryName) {
-    throw new ErrorResponse("Category name is already taken", 400, [
-      { name: ["Category name is already taken"] },
-    ])
+    throw new ErrorResponse("Category name is already taken", 400, {
+      name: ["Category name is already taken"],
+    })
   }
 
   // 3. Check if default category name is taken
@@ -55,9 +55,9 @@ const update = async (request, user) => {
     isDefault: true,
   })
   if (defaultCategoryName) {
-    throw new ErrorResponse("Category name is already taken", 400, [
-      { name: ["Category name is already taken"] },
-    ])
+    throw new ErrorResponse("Category name is already taken", 400, {
+      name: ["Category name is already taken"],
+    })
   }
 
   // 4. Check if category isDefault

@@ -179,17 +179,17 @@ const create = async (request, user) => {
     (categoryIsExist.user &&
       categoryIsExist.user.toString() !== user.toString())
   ) {
-    throw new ErrorResponse("Category not found", 404, [
-      { category: ["Category not found"] },
-    ])
+    throw new ErrorResponse("Category not found", 404, {
+      category: ["Category not found"],
+    })
   }
 
   //   2. Check type category
   if (categoryIsExist.type !== type && categoryIsExist.type !== "both") {
-    throw new ErrorResponse("Category type does not match", 400, [
-      { category: ["Category type does not match"] },
-      { type: ["Category type does not match"] },
-    ])
+    throw new ErrorResponse("Category type does not match", 400, {
+      category: ["Category type does not match"],
+      type: ["Category type does not match"],
+    })
   }
 
   // 3. Start a session for transaction
@@ -256,10 +256,10 @@ const update = async (request, user) => {
 
       //   3.2 Check type category
       if (categoryIsExist.type !== type && categoryIsExist.type !== "both") {
-        throw new ErrorResponse("Category type does not match", 400, [
-          { category: ["Category type does not match"] },
-          { type: ["Category type does not match"] },
-        ])
+        throw new ErrorResponse("Category type does not match", 400, {
+          category: ["Category type does not match"],
+          type: ["Category type does not match"],
+        })
       }
 
       // 3.3 Change category on transaction
@@ -329,7 +329,7 @@ const getAll = async (request, user) => {
   if (category !== "all") filter.category = category
 
   const transactions = await Transaction.find(filter)
-    .sort({ date: sort === "asc" ? -1 : 1 })
+    .sort({ date: sort === "asc" ? 1 : -1 })
     .populate("category", "name icon color")
     .select("amount category type date notes createdAt")
   return transactions
