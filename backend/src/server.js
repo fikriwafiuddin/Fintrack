@@ -9,7 +9,13 @@ import router from "./routers/router.js"
 const app = express()
 const PORT = process.env.PORT || 5000
 
-app.use(cors())
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(httpLogger)
