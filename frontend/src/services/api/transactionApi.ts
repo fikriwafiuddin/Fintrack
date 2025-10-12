@@ -1,8 +1,10 @@
 import { axiosInstance } from "@/lib/axios"
-import type { TransactionFilter } from "@/types"
-import type { FormDataTransaction } from "@/types/api"
+import type { FormDataTransaction, TransactionFilter } from "@/types"
 
-const create = async (data: FormDataTransaction, token: string) => {
+const create = async (
+  data: Omit<FormDataTransaction, "time">,
+  token: string
+) => {
   const response = await axiosInstance.post("/transactions", data, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -11,7 +13,11 @@ const create = async (data: FormDataTransaction, token: string) => {
   return response.data
 }
 
-const update = async (id: string, data: FormDataTransaction, token: string) => {
+const update = async (
+  id: string,
+  data: Omit<FormDataTransaction, "time">,
+  token: string
+) => {
   const response = await axiosInstance.put(`/transactions/${id}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -24,7 +24,7 @@ export const useCreateTransaction = () => {
   return useMutation<
     SuccessResponse<{ category: Category }>,
     AxiosError<ErrorResponse<TransactionFieldErrors>>,
-    FormDataTransaction
+    Omit<FormDataTransaction, "time">
   >({
     mutationFn: async (data) => {
       const token = await getToken()
@@ -58,7 +58,7 @@ export const useUpdateTransaction = () => {
   return useMutation<
     SuccessResponse<{ transaction: Transaction<string> }>,
     AxiosError<ErrorResponse<TransactionFieldErrors>>,
-    { id: string; data: FormDataTransaction }
+    { id: string; data: Omit<FormDataTransaction, "time"> }
   >({
     mutationFn: async ({ id, data }) => {
       const token = await getToken()

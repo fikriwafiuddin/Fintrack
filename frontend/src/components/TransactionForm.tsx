@@ -59,6 +59,9 @@ function TransactionForm({ transaction }: TransactionFormProps) {
       amount: transaction?.amount || "",
       category: transaction?.category || "",
       date: transaction?.date || new Date(),
+      time: transaction?.date
+        ? format(new Date(transaction.date), "HH:mm")
+        : format(new Date(), "HH:mm"),
       notes: transaction?.notes || "",
     },
   })
@@ -99,9 +102,20 @@ function TransactionForm({ transaction }: TransactionFormProps) {
   }, [filteredCategories, form])
 
   const onSubmit = (data: FormDataTransaction) => {
+    const [hours, minutes] = data.time.split(":").map(Number)
+    const dateWithTime = new Date(data.date)
+    dateWithTime.setHours(hours, minutes, 0, 0)
+
+    const transactionData = {
+      type: data.type,
+      amount: data.amount,
+      category: data.category,
+      date: dateWithTime,
+      notes: data.notes,
+    }
     if (transaction) {
       update(
-        { id: transaction._id, data },
+        { id: transaction._id, data: transactionData },
         {
           onSuccess: () => navigate("/transactions"),
           onError: (error) => {
@@ -129,7 +143,7 @@ function TransactionForm({ transaction }: TransactionFormProps) {
         }
       )
     } else {
-      create(data, {
+      create(transactionData, {
         onSuccess: () => navigate("/transactions"),
         onError: (error) => {
           const axiosError = error as AxiosError<
@@ -255,46 +269,65 @@ function TransactionForm({ transaction }: TransactionFormProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "dd MMMM yyyy")
-                          ) : (
-                            <span>Select date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date()}
-                        autoFocus
-                        className="p-3 pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Date and Time */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              "w-full pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "dd MMMM yyyy")
+                            ) : (
+                              <span>Pilih tanggal</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date) => date > new Date()}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="time"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Time</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input type="time" {...field} className="pl-3" />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}

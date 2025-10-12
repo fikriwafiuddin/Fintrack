@@ -58,7 +58,7 @@ function TransactionCard({ transaction }: TransactionCardProps) {
             <div>
               <p className="font-medium">{transaction.category.name}</p>
               <p className="text-sm text-muted-foreground">
-                {format(new Date(transaction.date), "dd MMMM yyyy")}
+                {format(new Date(transaction.date), "dd MMMM yyyy HH:mm")}
               </p>
               {transaction.notes && (
                 <p className="text-xs text-muted-foreground mt-1 max-w-xs truncate">

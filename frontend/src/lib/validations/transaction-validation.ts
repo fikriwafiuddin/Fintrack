@@ -10,6 +10,9 @@ const add = z.object({
   ),
   category: z.string("Category is required"),
   date: z.date("Date is required"),
+  time: z
+    .string("Time must be a string")
+    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format"),
   notes: z.string().optional(),
 })
 
