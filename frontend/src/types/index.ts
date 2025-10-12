@@ -73,4 +73,4 @@ export interface TransactionFieldErrors {
 }
 
 export type FormDataTransaction = z.infer<typeof transactionValidation.add>
-type FormDataCategory = z.infer<typeof categoryValidation.add>
+export type FormDataCategory = z.infer<typeof categoryValidation.add>

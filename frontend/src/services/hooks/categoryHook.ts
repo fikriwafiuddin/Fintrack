@@ -1,10 +1,11 @@
 import { useAuth } from "@clerk/clerk-react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import categoryApi, { type FormDataCategory } from "../api/categoryApi"
+import categoryApi from "../api/categoryApi"
 import type {
   Category,
   CategoryFieldErrors,
   ErrorResponse,
+  FormDataCategory,
   SuccessResponse,
 } from "@/types"
 import { toast } from "sonner"

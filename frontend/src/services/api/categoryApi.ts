@@ -1,9 +1,5 @@
 import { axiosInstance } from "@/lib/axios"
-import type categoryValidation from "@/lib/validations/category-validation"
-import type { Category, SuccessResponse } from "@/types"
-import { z } from "zod"
-
-export type FormDataCategory = z.infer<typeof categoryValidation.add>
+import type { Category, FormDataCategory, SuccessResponse } from "@/types"
 
 const create = async (
   data: FormDataCategory,

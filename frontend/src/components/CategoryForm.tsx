@@ -1,5 +1,10 @@
 import categoryValidation from "@/lib/validations/category-validation"
-import type { Category, CategoryFieldErrors, ErrorResponse } from "@/types"
+import type {
+  Category,
+  CategoryFieldErrors,
+  ErrorResponse,
+  FormDataCategory,
+} from "@/types"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -26,7 +31,6 @@ import {
 } from "@/services/hooks/categoryHook"
 import { Loader2Icon } from "lucide-react"
 import type { AxiosError } from "axios"
-import type { FormDataCategory } from "@/services/api/categoryApi"
 
 interface CategoryFormProps {
   category?: Category
