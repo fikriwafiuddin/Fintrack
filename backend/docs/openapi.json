@@ -3,7 +3,11 @@
   "info": {
     "title": "Fintrack API",
     "version": "1.0.0",
-    "description": "This is a sample server for a financial tracking application."
+    "description": "This is a sample server for a financial tracking application.",
+    "license": {
+      "name": "ISC License",
+      "url": "https://www.isc.org/licenses/"
+    }
   },
   "paths": {
     "/categories": {

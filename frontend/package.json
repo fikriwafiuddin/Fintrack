@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "license": "ISC",
   "dependencies": {
     "@clerk/clerk-react": "^5.49.1",
     "@hookform/resolvers": "^5.2.2",
