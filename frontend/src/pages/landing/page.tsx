@@ -143,8 +143,8 @@ const LandingPage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-primary text-primary-foreground py-16">
-        <div className="container mx-auto px-4 text-center">
+      <div className="bg-primary text-primary-foreground">
+        <div className="container mx-auto px-4 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">
             Ready to Manage Your Finances?
           </h2>
@@ -165,6 +165,7 @@ const LandingPage = () => {
             )}
           </Button>
         </div>
+        <p className="text-sm ml-1 pb-1">1.0.0v</p>
       </div>
     </div>
   )
