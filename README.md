@@ -31,6 +31,12 @@ This application aims to manage expenses and income.
 - Winston
 - Zod
 
+## Requirements
+
+- Node.js v20+
+- MongoDB
+- pnpm v9+
+
 **Tools:**
 
 - Git + GitHub Actions (CI/CD)
