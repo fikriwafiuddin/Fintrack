@@ -58,7 +58,7 @@ function TransactionForm({ transaction }: TransactionFormProps) {
       type: transaction?.type || "expense",
       amount: transaction?.amount || "",
       category: transaction?.category || "",
-      date: transaction?.date || new Date(),
+      date: transaction?.date ? new Date(transaction?.date) : new Date(),
       time: transaction?.date
         ? format(new Date(transaction.date), "HH:mm")
         : format(new Date(), "HH:mm"),
@@ -236,7 +236,12 @@ function TransactionForm({ transaction }: TransactionFormProps) {
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>
+                    Category{" "}
+                    {isCategoriesLoading && (
+                      <Loader2Icon className="animate-spin size-4" />
+                    )}
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -348,7 +353,7 @@ function TransactionForm({ transaction }: TransactionFormProps) {
             />
 
             <Button
-              disabled={creating || updating}
+              disabled={creating || updating || isCategoriesLoading}
               className="w-full"
               type="submit"
             >
