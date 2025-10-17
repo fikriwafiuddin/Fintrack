@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Fintrack API",
-    "version": "1.0.0",
+    "version": "1.1.1",
     "description": "This is a sample server for a financial tracking application.",
     "license": {
       "name": "ISC License",
@@ -1630,6 +1630,834 @@
         ]
       }
     },
+    "/budgets": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Budgets"],
+        "summary": "Get all budgets",
+        "description": "Get all budgets",
+        "responses": {
+          "200": {
+            "description": "A list of budgets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Budgets retrivied successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "budgets": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Budget"
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Budgets"],
+        "summary": "Create a new budget",
+        "description": "Create a new budget",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 400000
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": ["monthly", "yearly"],
+                    "example": "yearly"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "example": "2025-10-17T21:18:53.515Z"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "example": "2025-10-17T21:18:53.515Z"
+                  }
+                },
+                "required": [
+                  "category",
+                  "amount",
+                  "period",
+                  "endDate",
+                  "startDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Budget created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Budget created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "budget": {
+                          "$ref": "#/components/schemas/Budget"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "Category": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "Category is required"
+                          }
+                        },
+                        "amount": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer",
+                            "example": "Amount must be a positive number"
+                          }
+                        },
+                        "period": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "Period must be one of: yearly, monthly"
+                          }
+                        },
+                        "startDate": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "Start date is required"
+                          }
+                        },
+                        "endDate": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "example": "End date is required"
+                          }
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/budgets/{budgetId}": {
+      "put": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Budgets"],
+        "summary": "Update budget",
+        "description": "Update data budget by id",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "example": 400000
+                  },
+                  "period": {
+                    "type": "string",
+                    "enum": ["monthly", "yearly"],
+                    "example": "yearly"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "example": "2025-10-17T21:18:53.515Z"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "example": "2025-10-17T21:18:53.515Z"
+                  }
+                },
+                "required": [
+                  "category",
+                  "amount",
+                  "period",
+                  "endDate",
+                  "startDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Budget updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Budget updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "category": {
+                          "$ref": "#/components/schemas/Budget"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean",
+                          "description": "Indicates if the request was successful",
+                          "example": "false"
+                        },
+                        "message": {
+                          "type": "string",
+                          "example": "Validation error"
+                        },
+                        "errors": {
+                          "type": "object",
+                          "properties": {
+                            "Category": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "example": "Category is required"
+                              }
+                            },
+                            "amount": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer",
+                                "example": "Amount must be a positive number"
+                              }
+                            },
+                            "period": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "example": "Period must be one of: yearly, monthly"
+                              }
+                            },
+                            "startDate": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "example": "Start date is required"
+                              }
+                            },
+                            "endDate": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "example": "End date is required"
+                              }
+                            }
+                          }
+                        },
+                        "data": {
+                          "type": "object",
+                          "example": {}
+                        },
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "timestamp": {
+                              "type": "string",
+                              "example": "2025-10-02T10:30:05.000Z"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Budget not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Budget not found"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "budgetId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the budget to update",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "tags": ["Budgets"],
+        "summary": "Delete budget",
+        "description": "Delete budget by id",
+        "responses": {
+          "200": {
+            "description": "Budget deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was successful",
+                      "example": "true"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Budget deleted successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "budget": {
+                          "$ref": "#/components/schemas/Budget"
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Budget not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Budget not found"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates if the request was error",
+                      "example": "false"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal Server Error"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {}
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "timestamp": {
+                          "type": "string",
+                          "example": "2025-10-02T10:30:05.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "budgetId",
+            "in": "path",
+            "required": true,
+            "description": "ID of the budget to delete",
+            "schema": {
+              "type": "string",
+              "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+            }
+          }
+        ]
+      }
+    },
     "/dashboard/balance": {
       "get": {
         "security": [
@@ -2483,6 +3311,52 @@
           "notes": {
             "type": "string",
             "example": "Grocery shopping at Walmart"
+          }
+        }
+      },
+      "Budget": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+          },
+          "category": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "64f0c9e2b5e4c8a1d2f3g4h5"
+              },
+              "name": {
+                "type": "string",
+                "example": "Food"
+              },
+              "color": {
+                "type": "string",
+                "example": "#FF5733"
+              }
+            }
+          },
+          "amount": {
+            "type": "number",
+            "example": 400000
+          },
+          "spent": {
+            "type": "number",
+            "example": 200000
+          },
+          "period": {
+            "type": "string",
+            "example": "monthly"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2025-10-01T14:48:00.000Z"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2025-10-17T21:18:53.515Z"
           }
         }
       }
