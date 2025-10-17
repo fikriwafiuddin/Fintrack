@@ -1,5 +1,6 @@
 import MainLayout from "@/layouts/MainLayout"
 import AddTransactionPage from "@/pages/add-transaction/page"
+import BudgetsPage from "@/pages/budgets/page"
 import CategoriesPage from "@/pages/categories/page"
 import DashboardPage from "@/pages/dashboard/page"
 import LandingPage from "@/pages/landing/page"
@@ -26,6 +27,10 @@ const protectedRoutes = createBrowserRouter([
       {
         path: "transactions",
         Component: TransactionsPage,
+      },
+      {
+        path: "budgets",
+        Component: BudgetsPage,
       },
       {
         path: "reports",

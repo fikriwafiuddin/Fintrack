@@ -1,3 +1,4 @@
+import type budgetValidation from "@/lib/validations/budget-validation"
 import type categoryValidation from "@/lib/validations/category-validation"
 import type transactionValidation from "@/lib/validations/transaction-validation"
 import { z } from "zod"
@@ -41,6 +42,16 @@ export type Transaction<TCategory> = {
   notes?: string
 }
 
+export type Budget = {
+  _id: string
+  category: Category
+  amount: number
+  spent: number
+  period: "yearly" | "monthly"
+  endDate: Date
+  startDate: Date
+}
+
 export type BreakdownCategoryItem = {
   _id: number
   name: string
@@ -74,3 +85,4 @@ export interface TransactionFieldErrors {
 
 export type FormDataTransaction = z.infer<typeof transactionValidation.add>
 export type FormDataCategory = z.infer<typeof categoryValidation.add>
+export type FormDataBudget = z.infer<typeof budgetValidation.add>

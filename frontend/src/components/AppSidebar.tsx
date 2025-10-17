@@ -16,6 +16,7 @@ import {
   Settings,
   BarChart3,
   WalletIcon,
+  PiggyBankIcon,
 } from "lucide-react"
 import { Link, useLocation } from "react-router"
 
@@ -34,6 +35,11 @@ const navigation = [
     name: "History",
     href: "/transactions",
     icon: List,
+  },
+  {
+    name: "Budgets",
+    href: "/budgets",
+    icon: PiggyBankIcon,
   },
   {
     name: "Reports",
