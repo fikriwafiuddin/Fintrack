@@ -5,11 +5,13 @@ import { ErrorResponse } from "../utils/response.js"
 import transactionRouter from "./transactionRouter.js"
 import dashboardRouter from "./dashboardRouter.js"
 import reportRouter from "./reportRouter.js"
+import budgetRouter from "./budgetRouter.js"
 
 const router = express.Router()
 
 router.use("/categories", categoryRouter)
 router.use("/transactions", transactionRouter)
+router.use("/budgets", budgetRouter)
 router.use("/dashboard", dashboardRouter)
 router.use("/report", reportRouter)
 
