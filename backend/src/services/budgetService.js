@@ -120,15 +120,16 @@ const update = async (request, user) => {
   }
 
   // 6. Update budget
-  const updatedBudget = await Budget.create({
-    user,
-    category,
-    amount,
-    period,
-    startDate,
-    endDate,
-  })
-  return updatedBudget
+  budget.category = category
+  budget.amount = amount
+  budget.period = period
+  budget.startDate = startDate
+  budget.endDate = endDate
+
+  // 7. Save budget
+  await budget.save()
+
+  return budget
 }
 
 const remove = async (request, user) => {
