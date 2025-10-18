@@ -11,7 +11,7 @@ import type { AxiosError } from "axios"
 import budgetApi from "../api/budgetApi"
 import { toast } from "sonner"
 
-const queryKeyBudgets = (options: object = {}) => {
+export const queryKeyBudgets = (options: object = {}) => {
   return ["budgets", options]
 }
 

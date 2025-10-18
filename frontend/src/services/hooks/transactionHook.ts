@@ -12,6 +12,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import transactionApi from "../api/transactionApi"
 import type { AxiosError } from "axios"
 import { toast } from "sonner"
+import { queryKeyBudgets } from "./budgetHook"
 
 const queryKeyTransactions = (options: object = {}) => {
   return ["transactions", options]
@@ -35,6 +36,7 @@ export const useCreateTransaction = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeyTransactions() })
+      queryClient.invalidateQueries({ queryKey: queryKeyBudgets() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -69,6 +71,7 @@ export const useUpdateTransaction = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeyTransactions() })
+      queryClient.invalidateQueries({ queryKey: queryKeyBudgets() })
       toast.success(data.message)
     },
     onError: (error) => {
@@ -103,6 +106,7 @@ export const useRemoveTransaction = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeyTransactions() })
+      queryClient.invalidateQueries({ queryKey: queryKeyBudgets() })
       toast.success(data.message)
     },
     onError: (error) => {
