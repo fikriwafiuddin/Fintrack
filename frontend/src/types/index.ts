@@ -83,6 +83,14 @@ export interface TransactionFieldErrors {
   notes?: string[]
 }
 
+export interface BudgetFieldErrors {
+  category?: string[]
+  amount?: string[]
+  period?: string[]
+  startDate?: string[]
+  endDate?: string[]
+}
+
 export type FormDataTransaction = z.infer<typeof transactionValidation.add>
 export type FormDataCategory = z.infer<typeof categoryValidation.add>
 export type FormDataBudget = z.infer<typeof budgetValidation.add>

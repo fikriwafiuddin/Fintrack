@@ -1,7 +1,7 @@
 import type { Budget } from "@/types"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Button } from "./ui/button"
-import { CalendarIcon, EditIcon, Trash2Icon } from "lucide-react"
+import { CalendarIcon, EditIcon, Loader2Icon, Trash2Icon } from "lucide-react"
 import { format } from "date-fns"
 import { Progress } from "./ui/progress"
 import { useState } from "react"
@@ -15,6 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog"
+import { useRemoveBudget } from "@/services/hooks/budgetHook"
 
 interface BudgetCardProps {
   budget: Budget
@@ -23,6 +24,13 @@ interface BudgetCardProps {
 function BudgetCard({ budget }: BudgetCardProps) {
   const [isEditingBudget, setIsEditingBudget] = useState<boolean>(false)
   const [isDeletingBudget, setIsDeletinBudget] = useState<boolean>(false)
+  const { mutate: remove, isPending: removing } = useRemoveBudget()
+
+  const handleDelete = () => {
+    remove(budget._id, {
+      onSuccess: () => setIsDeletinBudget(false),
+    })
+  }
 
   const percentage = Math.min((budget.spent / budget.amount) * 100, 100)
   let status = { color: "text-green-600", label: "Safe" }
@@ -141,7 +149,13 @@ function BudgetCard({ budget }: BudgetCardProps) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button variant="destructive">Delete</Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={removing}
+            >
+              {removing ? <Loader2Icon className="animate-spin" /> : "Delete"}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

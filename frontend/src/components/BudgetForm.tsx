@@ -16,17 +16,15 @@ import {
 import { Input } from "./ui/input"
 import { Button } from "./ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
-import type { Budget } from "@/types"
+import type { Budget, FormDataBudget } from "@/types"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import budgetValidation from "@/lib/validations/budget-validation"
 import { useGetAllCategories } from "@/services/hooks/categoryHook"
-import { CalendarIcon, Loader2Icon } from "lucide-react"
+import { Loader2Icon } from "lucide-react"
 import CategoryItemSkeleton from "./CategoryItemSkeleton"
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { Calendar } from "./ui/calendar"
+import { useCreateBudget, useUpdateBudget } from "@/services/hooks/budgetHook"
+import DatePicker from "./DatePicker"
 
 interface BudgetFormProps {
   budget?: Budget
@@ -41,14 +39,16 @@ function BudgetForm({ budget, open, onOpenChange }: BudgetFormProps) {
       category: budget?.category._id || "",
       amount: budget?.amount || 0,
       period: budget?.period || "monthly",
-      startDate: budget?.startDate || new Date(),
-      endDate:
-        budget?.endDate ||
-        new Date(new Date().setMonth(new Date().getMonth() + 1)),
+      startDate: budget?.startDate ? new Date(budget.startDate) : new Date(),
+      endDate: budget?.endDate
+        ? new Date(budget.endDate)
+        : new Date(new Date().setMonth(new Date().getMonth() + 1)),
     },
   })
   const { data: categoryData, isPending: isCategoriesLoading } =
     useGetAllCategories()
+  const { mutate: create, isPending: creating } = useCreateBudget()
+  const { mutate: update, isPending: updating } = useUpdateBudget()
 
   const allCategories = [
     ...(categoryData?.customCategories || []),
@@ -58,7 +58,71 @@ function BudgetForm({ budget, open, onOpenChange }: BudgetFormProps) {
     (category) => category.type === "both" || category.type === "expense"
   )
 
-  const onSubmit = () => {}
+  const onSubmit = (data: FormDataBudget) => {
+    if (budget) {
+      update(
+        { id: budget._id, data },
+        {
+          onSuccess: () => {
+            onOpenChange(false)
+            form.reset()
+          },
+          onError: (error) => {
+            const axiosError = error
+
+            if (
+              axiosError.response &&
+              axiosError.response.status === 400 &&
+              axiosError.response.data?.errors
+            ) {
+              const fieldErrors = axiosError.response.data.errors
+
+              Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
+                if (messages && messages.length > 0) {
+                  form.setError(fieldName as keyof FormDataBudget, {
+                    type: "server",
+                    message: messages[0],
+                  })
+                }
+              })
+            }
+          },
+        }
+      )
+    } else {
+      create(data, {
+        onSuccess: () => {
+          onOpenChange(false)
+          form.reset()
+        },
+        onError: (error) => {
+          const axiosError = error
+
+          if (
+            axiosError.response &&
+            axiosError.response.status === 400 &&
+            axiosError.response.data?.errors
+          ) {
+            const fieldErrors = axiosError.response.data.errors
+
+            Object.entries(fieldErrors).forEach(([fieldName, messages]) => {
+              if (messages && messages.length > 0) {
+                form.setError(fieldName as keyof FormDataBudget, {
+                  type: "server",
+                  message: messages[0],
+                })
+              }
+            })
+          }
+        },
+      })
+    }
+  }
+
+  const handleCancel = () => {
+    form.reset()
+    onOpenChange(false)
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -123,7 +187,7 @@ function BudgetForm({ budget, open, onOpenChange }: BudgetFormProps) {
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="Contoh: 5000000"
+                      placeholder="Example: 5000000"
                       {...field}
                       value={
                         field.value === undefined || field.value === null
@@ -171,36 +235,7 @@ function BudgetForm({ budget, open, onOpenChange }: BudgetFormProps) {
                 <FormItem>
                   <FormLabel>Start Date</FormLabel>
                   <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "dd MMMM yyyy")
-                            ) : (
-                              <span>Choose date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date > new Date()}
-                          initialFocus
-                          className="p-3 pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DatePicker field={field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -215,36 +250,7 @@ function BudgetForm({ budget, open, onOpenChange }: BudgetFormProps) {
                 <FormItem>
                   <FormLabel>End Date</FormLabel>
                   <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "dd MMMM yyyy")
-                            ) : (
-                              <span>Pilih tanggal</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) => date > new Date()}
-                          initialFocus
-                          className="p-3 pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DatePicker field={field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -252,14 +258,20 @@ function BudgetForm({ budget, open, onOpenChange }: BudgetFormProps) {
             />
 
             <div className="flex space-x-2">
-              <Button type="submit" className="flex-1">
-                {budget ? "Update Budget" : "Add Budget"}
-              </Button>
               <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
+                type="submit"
+                className="flex-1"
+                disabled={creating || updating}
               >
+                {creating || updating ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : budget ? (
+                  "Update Budget"
+                ) : (
+                  "Add Budget"
+                )}
+              </Button>
+              <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
             </div>
