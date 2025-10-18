@@ -144,7 +144,10 @@ const remove = async (request, user) => {
 }
 
 const getAll = async (user) => {
-  const budgets = await Budget.find({ user })
+  const budgets = await Budget.find({ user }).populate(
+    "category",
+    "name icon color"
+  )
   return budgets
 }
 
