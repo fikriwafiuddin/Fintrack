@@ -7,6 +7,7 @@ import Category from "../models/categoryModel.js"
 import mongoose from "mongoose"
 import { ErrorResponse } from "../utils/response.js"
 import User from "../models/userModel.js"
+import Budget from "../models/budgetModel.js"
 
 /**
  * Helper function untuk update summaries (Monthly, Category, Balance)
@@ -166,6 +167,50 @@ async function updateSummaries(
   await userData.save({ session })
 }
 
+/**
+ * Update budget spent values when transactions are created, updated, or deleted
+ * @param {String} user - User ID
+ * @param {Object|null} newTransaction - The new transaction (for create/update)
+ * @param {Object} session - Mongoose session
+ * @param {Object|null} oldTransaction - The old transaction (for update/delete)
+ */
+export const updateBudgets = async (
+  user,
+  newTransaction,
+  session,
+  oldTransaction = null
+) => {
+  // Helper untuk update satu transaksi
+  const applyBudgetChange = async (trx, sign) => {
+    if (!trx || trx.type !== "expense") return // only expenses affect the budget
+
+    // Search for active budgets by category and transaction date
+    const budget = await Budget.findOne({
+      user,
+      category: trx.category,
+      startDate: { $lte: trx.date },
+      endDate: { $gte: trx.date },
+    }).session(session)
+
+    if (budget) {
+      budget.spent += sign * trx.amount
+      // Make sure the spent is not negative
+      if (budget.spent < 0) budget.spent = 0
+      await budget.save({ session })
+    }
+  }
+
+  // If there is an oldTransaction → it means update or delete
+  if (oldTransaction) {
+    await applyBudgetChange(oldTransaction, -1) // remove old influences
+  }
+
+  // If there is a newTransaction → it means create or update
+  if (newTransaction) {
+    await applyBudgetChange(newTransaction, 1) // add new influences
+  }
+}
+
 const create = async (request, user) => {
   const { type, amount, category, date, notes } = validation(
     transactionValidation.create,
@@ -205,7 +250,10 @@ const create = async (request, user) => {
     // 5. Update summaries
     await updateSummaries(user, transaction, session)
 
-    // 6. Commit transaction
+    // 6. Update budgets
+    await updateBudgets(user, transaction, session)
+
+    // 7. Commit transaction
     await session.commitTransaction()
     return transaction
   } catch (error) {
@@ -275,6 +323,9 @@ const update = async (request, user) => {
     // 4. Update summaries
     await updateSummaries(user, transaction, session, oldTransaction)
 
+    // 5. Update budgets
+    await updateBudgets(user, transaction, session, oldTransaction)
+
     // 6. Save transaction changes
     await transaction.save({ session })
 
@@ -305,10 +356,13 @@ const remove = async (request, user) => {
     // 3. Update summaries
     await updateSummaries(user, null, session, transaction)
 
-    // 4. Delete transaction
+    // 4. Update budgets
+    await updateBudgets(user, null, session, transaction)
+
+    // 5. Delete transaction
     await transaction.deleteOne({ session })
 
-    // 5. Commit transaction
+    // 6. Commit transaction
     await session.commitTransaction()
     return transaction
   } catch (error) {
