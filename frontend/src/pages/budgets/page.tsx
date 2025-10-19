@@ -1,10 +1,13 @@
 import BudgetCard from "@/components/BudgetCard"
 import BudgetCardSkeleton from "@/components/BudgetCardSkeleton"
 import BudgetForm from "@/components/BudgetForm"
+import DatePicker from "@/components/DatePicker"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 import { useGetAllBudgets } from "@/services/hooks/budgetHook"
-import { AlertTriangleIcon, PlusIcon } from "lucide-react"
+import { AlertTriangleIcon, FilterIcon, PlusIcon } from "lucide-react"
 import { useState } from "react"
 
 function BudgetsPage() {
@@ -15,6 +18,10 @@ function BudgetsPage() {
     isError,
   } = useGetAllBudgets()
   const [isAddingBudget, setIsAddingBudget] = useState<boolean>(false)
+  const [startDate, setStartDate] = useState<Date>(new Date())
+  const [endDate, setEndDate] = useState<Date>(
+    new Date(new Date().setMonth(new Date().getMonth() + 1))
+  )
 
   const budgets = data?.budgets || []
   const errorMessage = error instanceof Error ? error.message : "Unknown error."
@@ -40,6 +47,33 @@ function BudgetsPage() {
           Add Budget
         </Button>
       </div>
+
+      {/* Filter */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <FilterIcon className="h-5 w-5" />
+            {/* Filter & Search */}
+            Filter
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid sm:grid-cols-2 gap-4 max-w-md">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Label>From</Label>
+              <div className="flex-1">
+                <DatePicker value={startDate} onChange={setStartDate} />
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Label>To</Label>
+              <div className="flex-1">
+                <DatePicker value={endDate} onChange={setEndDate} />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {isError && (
         <Alert variant="destructive">
