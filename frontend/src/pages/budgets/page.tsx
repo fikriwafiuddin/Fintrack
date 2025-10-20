@@ -11,17 +11,19 @@ import { AlertTriangleIcon, FilterIcon, PlusIcon } from "lucide-react"
 import { useState } from "react"
 
 function BudgetsPage() {
+  const [startDate, setStartDate] = useState<Date>(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  )
+  const [endDate, setEndDate] = useState<Date>(
+    new Date(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
+  )
   const {
     isPending: isFetchingBudgets,
     data,
     error,
     isError,
-  } = useGetAllBudgets()
+  } = useGetAllBudgets({ startDate, endDate })
   const [isAddingBudget, setIsAddingBudget] = useState<boolean>(false)
-  const [startDate, setStartDate] = useState<Date>(new Date())
-  const [endDate, setEndDate] = useState<Date>(
-    new Date(new Date().setMonth(new Date().getMonth() + 1))
-  )
 
   const budgets = data?.budgets || []
   const errorMessage = error instanceof Error ? error.message : "Unknown error."

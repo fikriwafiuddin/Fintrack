@@ -117,7 +117,7 @@ export const useRemoveBudget = () => {
   })
 }
 
-export const useGetAllBudgets = () => {
+export const useGetAllBudgets = (request: object) => {
   const { getToken } = useAuth()
 
   return useQuery<
@@ -125,13 +125,13 @@ export const useGetAllBudgets = () => {
     AxiosError<ErrorResponse>,
     { budgets: Budget[] }
   >({
-    queryKey: queryKeyBudgets(),
+    queryKey: queryKeyBudgets(request),
     queryFn: async () => {
       const token = await getToken()
       if (!token) {
         throw new Error("Authentication token is missing")
       }
-      return await budgetApi.getAll(token)
+      return await budgetApi.getAll(request, token)
     },
     select: (data) => {
       return data.data

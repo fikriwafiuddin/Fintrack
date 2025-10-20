@@ -28,8 +28,9 @@ const remove = async (id: string, token: string) => {
   return response.data
 }
 
-const getAll = async (token: string) => {
+const getAll = async (request: object, token: string) => {
   const response = await axiosInstance.get("/budgets", {
+    params: { ...request },
     headers: {
       Authorization: `Bearer ${token}`,
     },
