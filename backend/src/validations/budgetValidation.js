@@ -97,9 +97,39 @@ const remove = z.object({
     .length(24, "Invalid ID"),
 })
 
+const getAll = z.object({
+  startDate: z
+    .string({
+      required_error: "Start date is required",
+      invalid_type_error: "Start date must be a string",
+    })
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Start date must be a valid date string",
+    })
+    .default(
+      new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
+    ),
+  endDate: z
+    .string({
+      required_error: "End date is required",
+      invalid_type_error: "End date must be a string",
+    })
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "End date must be a valid date string",
+    })
+    .default(
+      new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        0
+      ).toISOString()
+    ),
+})
+
 const budgetValidation = {
   create,
   update,
   remove,
+  getAll,
 }
 export default budgetValidation

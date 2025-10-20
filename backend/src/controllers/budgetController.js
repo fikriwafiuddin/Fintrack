@@ -46,11 +46,18 @@ const remove = async (req, res, next) => {
 const getAll = async (req, res, next) => {
   try {
     const user = req.user
+    const request = req.query
 
-    const budgets = await budgetService.getAll(user)
+    const { budgets, filters } = await budgetService.getAll(request, user)
     return res
       .status(200)
-      .json(new SuccessResponse("Budgets successfull retrieved", { budgets }))
+      .json(
+        new SuccessResponse(
+          "Budgets successfull retrieved",
+          { budgets },
+          { filters }
+        )
+      )
   } catch (error) {
     next(error)
   }

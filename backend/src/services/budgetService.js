@@ -144,12 +144,32 @@ const remove = async (request, user) => {
   return budget
 }
 
-const getAll = async (user) => {
-  const budgets = await Budget.find({ user }).populate(
-    "category",
-    "name icon color"
-  )
-  return budgets
+const getAll = async (request, user) => {
+  const { startDate, endDate } = validation(budgetValidation.getAll, request)
+
+  const filter = {
+    user,
+    $or: [
+      {
+        startDate: { $gte: startDate, $lte: endDate },
+      },
+      {
+        endDate: { $gte: startDate, $lte: endDate },
+      },
+      {
+        $and: [
+          { startDate: { $lte: startDate } },
+          { endDate: { $gte: endDate } },
+        ],
+      },
+    ],
+  }
+
+  const budgets = await Budget.find(filter)
+    .populate("category", "name icon color")
+    .sort({ startDate: 1 })
+
+  return { budgets, filters: { startDate, endDate } }
 }
 
 const budgetService = {
