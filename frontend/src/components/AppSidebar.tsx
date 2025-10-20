@@ -17,6 +17,7 @@ import {
   BarChart3,
   WalletIcon,
   PiggyBankIcon,
+  BotIcon,
 } from "lucide-react"
 import { Link, useLocation } from "react-router"
 
@@ -50,6 +51,11 @@ const navigation = [
     name: "Categories",
     href: "/categories",
     icon: Settings,
+  },
+  {
+    name: "Ask AI",
+    href: "/ask-ai",
+    icon: BotIcon,
   },
 ]
 
