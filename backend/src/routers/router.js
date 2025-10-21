@@ -6,6 +6,7 @@ import transactionRouter from "./transactionRouter.js"
 import dashboardRouter from "./dashboardRouter.js"
 import reportRouter from "./reportRouter.js"
 import budgetRouter from "./budgetRouter.js"
+import chatRouter from "./chatRouter.js"
 
 const router = express.Router()
 
@@ -14,6 +15,7 @@ router.use("/transactions", transactionRouter)
 router.use("/budgets", budgetRouter)
 router.use("/dashboard", dashboardRouter)
 router.use("/report", reportRouter)
+router.use("/chats", chatRouter)
 
 router.all(/.*/, (req, res) =>
   res.status(404).json(new ErrorResponse("Route not found", 404))
