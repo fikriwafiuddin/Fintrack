@@ -3,10 +3,9 @@ import { SuccessResponse } from "../utils/response.js"
 
 const show = async (req, res, next) => {
   try {
-    const id = req.params
     const user = req.user
 
-    const chat = await chatService.show(id, user)
+    const chat = await chatService.show(user)
 
     return res
       .status(200)
