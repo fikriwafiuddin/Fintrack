@@ -384,8 +384,13 @@ const getAll = async (request, user) => {
 
   const transactions = await Transaction.find(filter)
     .sort({ date: sort === "asc" ? 1 : -1 })
-    .populate("category", "name icon color")
+    .populate({
+      path: "category",
+      select: "name icon color",
+      options: { includeDeleted: true },
+    })
     .select("amount category type date notes createdAt")
+    .lean()
   return transactions
 }
 

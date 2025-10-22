@@ -36,7 +36,11 @@ const getSummary = async (request, user) => {
     month,
     year,
     user,
-  }).populate("categories.category", "name color")
+  }).populate({
+    path: "category",
+    select: "name icon color",
+    options: { includeDeleted: true },
+  })
 
   const expenseSummary = categorySummary.find((val) => val.type === "expense")
   const incomeSummary = categorySummary.find((val) => val.type === "income")

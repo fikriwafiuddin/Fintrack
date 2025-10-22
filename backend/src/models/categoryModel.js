@@ -37,7 +37,9 @@ const categorySchema = new mongoose.Schema(
 )
 
 categorySchema.pre(/^find/, function (next) {
-  this.where({ deleted: { $ne: true } })
+  if (!this.options.includeDeleted) {
+    this.where({ deleted: { $ne: true } })
+  }
   next()
 })
 

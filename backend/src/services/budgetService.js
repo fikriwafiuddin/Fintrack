@@ -166,8 +166,13 @@ const getAll = async (request, user) => {
   }
 
   const budgets = await Budget.find(filter)
-    .populate("category", "name icon color")
+    .populate({
+      path: "category",
+      select: "name icon color",
+      options: { includeDeleted: true },
+    })
     .sort({ startDate: 1 })
+    .lean()
 
   return { budgets, filters: { startDate, endDate } }
 }
