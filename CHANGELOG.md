@@ -38,3 +38,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Nothing yet (initial release)
+
+## [1.0.2] - 2025-10-22
+
+### Added
+
+- Nothing yet
+
+### Fixed
+
+- fixed an error where transaction and budget data could not be related to categories that had been deleted
+
+### Removed
+
+- Nothing yet
+
+## [1.1.2] - 2025-10-22
+
+### Added
+
+- Ask AI
+
+### Fixed
+
+- Nothing yet
+
+### Removed
+
+- Nothing yet
