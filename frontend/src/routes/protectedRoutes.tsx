@@ -1,5 +1,6 @@
 import MainLayout from "@/layouts/MainLayout"
 import AddTransactionPage from "@/pages/add-transaction/page"
+import AskAIPage from "@/pages/ask-AI/page"
 import BudgetsPage from "@/pages/budgets/page"
 import CategoriesPage from "@/pages/categories/page"
 import DashboardPage from "@/pages/dashboard/page"
@@ -39,6 +40,10 @@ const protectedRoutes = createBrowserRouter([
       {
         path: "categories",
         Component: CategoriesPage,
+      },
+      {
+        path: "ask-ai",
+        Component: AskAIPage,
       },
     ],
   },
