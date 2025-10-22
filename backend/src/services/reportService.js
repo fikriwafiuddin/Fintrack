@@ -37,7 +37,7 @@ const getSummary = async (request, user) => {
     year,
     user,
   }).populate({
-    path: "category",
+    path: "categories.category",
     select: "name icon color",
     options: { includeDeleted: true },
   })
