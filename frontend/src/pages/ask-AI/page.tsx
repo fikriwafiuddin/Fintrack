@@ -1,8 +1,6 @@
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Send, Bot, User, Lightbulb } from "lucide-react"
-// import { useToast } from '@/hooks/use-toast';
+import { Send, Bot, Lightbulb, AlertTriangle } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -11,54 +9,71 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-interface Message {
-  id: string
-  role: "user" | "assistant"
-  content: string
-  timestamp: Date
-}
+import { useAskAI, useGetChat } from "@/services/hooks/chatHook"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import chatValidation from "@/lib/validations/chat-validation"
+import type { FormDataAskAI } from "@/types"
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
+import { useEffect, useRef } from "react"
+import ChatMessage from "@/components/ChatMessage"
+import ChatMessageSkeleton from "@/components/ChatMessageSkeleton"
 
 const AskAIPage = () => {
-  //   const { toast } = useToast();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content:
-        "Hi! I'm an AI assistant to help you manage your finances. You can ask me about transactions, budgets, or financial tips. (AI features will be integrated soon)",
-      timestamp: new Date(),
+  const form = useForm({
+    resolver: zodResolver(chatValidation.askAI),
+    defaultValues: {
+      message: "",
     },
-  ])
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  })
+  const {
+    isPending: isLoadingChat,
+    isError: isErrorChat,
+    error: errorChat,
+    data: chat,
+  } = useGetChat()
+  const { isPending: sending, mutate: send } = useAskAI()
+  const messagesEndRef = useRef<HTMLDivElement | null>(null)
+  const messageValue = form.watch("message")
 
-  const handleSend = async () => {
-    if (!input.trim()) return
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: "user",
-      content: input,
-      timestamp: new Date(),
+  useEffect(() => {
+    if (chat?.messages?.length) {
+      scrollToBottom()
     }
+  }, [chat])
 
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setIsLoading(true)
+  useEffect(() => {
+    if (chat?.messages?.length) {
+      scrollToBottom()
+    }
+  }, [chat?.messages, sending])
 
-    // Placeholder untuk integrasi AI
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content:
-          "Terima kasih atas pertanyaan Anda! Fitur AI sedang dalam pengembangan dan akan segera tersedia untuk memberikan jawaban yang lebih akurat dan membantu.",
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, aiMessage])
-      setIsLoading(false)
-    }, 1000)
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const onSubmit = (data: FormDataAskAI) => {
+    send(data, {
+      onSuccess: () => form.reset(),
+    })
+  }
+
+  if (isErrorChat) {
+    const errorMessage =
+      errorChat instanceof Error ? errorChat.message : "Unknown error."
+
+    return (
+      <Alert variant="destructive">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Failed to Load Chat</AlertTitle>
+        <AlertDescription>
+          An error occurred while retrieving the chat list. Please try reloading
+          the page.
+          <p className="mt-1 text-xs opacity-80">{errorMessage}</p>
+        </AlertDescription>
+      </Alert>
+    )
   }
 
   return (
@@ -101,48 +116,27 @@ const AskAIPage = () => {
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex gap-3 ${
-              message.role === "user" ? "flex-row-reverse" : ""
-            }`}
-          >
-            <div
-              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-                message.role === "user" ? "bg-primary" : "bg-accent"
-              }`}
-            >
-              {message.role === "user" ? (
-                <User className="h-4 w-4 text-primary-foreground" />
-              ) : (
-                <Bot className="h-4 w-4 text-foreground" />
-              )}
-            </div>
-            <div
-              className={`flex-1 max-w-[80%] ${
-                message.role === "user" ? "text-right" : ""
-              }`}
-            >
-              <div
-                className={`inline-block p-3 rounded-lg ${
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-accent text-foreground"
-                }`}
-              >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {message.timestamp.toLocaleTimeString("id-ID", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </p>
-            </div>
-          </div>
-        ))}
-        {isLoading && (
+        {isLoadingChat ? (
+          <>
+            <ChatMessageSkeleton />
+            <ChatMessageSkeleton role="user" />
+          </>
+        ) : chat.messages.length === 0 ? (
+          <ChatMessage
+            message={{
+              _id: "1",
+              role: "model",
+              content:
+                "Hi! I'm an AI assistant to help you manage your finances. You can ask me about transactions, budgets, or financial tips",
+              timestamp: new Date().toLocaleString(),
+            }}
+          />
+        ) : (
+          chat.messages.map((message) => (
+            <ChatMessage key={message._id} message={message} />
+          ))
+        )}
+        {sending && (
           <div className="flex gap-3">
             <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center">
               <Bot className="h-4 w-4 text-foreground" />
@@ -167,34 +161,48 @@ const AskAIPage = () => {
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-border p-4 bg-background">
+      <div className="border-t border-border p-2 bg-background">
         <div className="max-w-4xl mx-auto">
-          <div className="flex gap-2">
-            <Textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault()
-                  handleSend()
-                }
-              }}
-              placeholder="Tanyakan sesuatu tentang keuangan Anda..."
-              className="min-h-[60px] max-h-[200px] resize-none"
-              disabled={isLoading}
-            />
-            <Button
-              onClick={handleSend}
-              disabled={!input.trim() || isLoading}
-              size="icon"
-              className="h-[60px] w-12 shrink-0"
-            >
-              <Send className="h-4 w-4" />
-            </Button>
-          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault()
+                              form.handleSubmit(onSubmit)()
+                            }
+                          }}
+                          placeholder="Ask anything"
+                          className="min-h-[60px] max-h-[200px] resize-none"
+                          disabled={sending}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={sending || !messageValue}
+                  size="icon"
+                  className="h-[60px] w-12 shrink-0"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
           <p className="text-xs text-muted-foreground mt-2">
             Press Enter to send, Shift+Enter for new line
           </p>

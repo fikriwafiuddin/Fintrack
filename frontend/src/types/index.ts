@@ -1,5 +1,6 @@
 import type budgetValidation from "@/lib/validations/budget-validation"
 import type categoryValidation from "@/lib/validations/category-validation"
+import type chatValidation from "@/lib/validations/chat-validation"
 import type transactionValidation from "@/lib/validations/transaction-validation"
 import { z } from "zod"
 
@@ -52,6 +53,18 @@ export type Budget = {
   startDate: Date
 }
 
+export type Message = {
+  _id: string
+  role: "user" | "model"
+  content: string
+  timestamp: string
+}
+
+export type Chat = {
+  _id: string
+  messages: Message[]
+}
+
 export type BreakdownCategoryItem = {
   _id: number
   name: string
@@ -94,3 +107,4 @@ export interface BudgetFieldErrors {
 export type FormDataTransaction = z.infer<typeof transactionValidation.add>
 export type FormDataCategory = z.infer<typeof categoryValidation.add>
 export type FormDataBudget = z.infer<typeof budgetValidation.add>
+export type FormDataAskAI = z.infer<typeof chatValidation.askAI>
