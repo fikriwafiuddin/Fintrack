@@ -1,5 +1,7 @@
 import mongoose from "mongoose"
 
+const enumCurrency = ["IDR", "USD", "EUR", "GBP", "JPY", "SGD", "MYR", "THB"]
+
 const userSchema = new mongoose.Schema(
   {
     userId: {
@@ -9,6 +11,11 @@ const userSchema = new mongoose.Schema(
     balance: {
       type: Number,
       default: 0,
+    },
+    currency: {
+      type: String,
+      enum: enumCurrency,
+      default: "IDR",
     },
   },
   { timestamps: true }
