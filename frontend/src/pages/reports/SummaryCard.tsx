@@ -1,3 +1,4 @@
+import CurrencyFormatter from "@/components/CurrencyFormatter"
 import { Card, CardContent } from "@/components/ui/card"
 import { CalendarIcon, TrendingUpIcon } from "lucide-react"
 
@@ -22,7 +23,7 @@ function SummaryCard({ summaryData }: SummaryCardProps) {
             <div>
               <p className="text-sm text-muted-foreground">Income</p>
               <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                Rp {summaryData.totalIncome.toLocaleString("id-ID")}
+                <CurrencyFormatter amount={summaryData.totalIncome} />
               </p>
             </div>
           </div>
@@ -38,7 +39,7 @@ function SummaryCard({ summaryData }: SummaryCardProps) {
             <div>
               <p className="text-sm text-muted-foreground">Expense</p>
               <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                Rp {summaryData.totalExpense.toLocaleString("id-ID")}
+                <CurrencyFormatter amount={summaryData.totalExpense} />
               </p>
             </div>
           </div>
@@ -72,7 +73,7 @@ function SummaryCard({ summaryData }: SummaryCardProps) {
                     : "text-orange-600 dark:text-orange-400"
                 }`}
               >
-                Rp {Math.abs(summaryData.difference).toLocaleString("id-ID")}
+                <CurrencyFormatter amount={Math.abs(summaryData.difference)} />
               </p>
             </div>
           </div>

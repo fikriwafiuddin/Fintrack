@@ -16,6 +16,7 @@ import {
   AlertDialogTitle,
 } from "./ui/alert-dialog"
 import { useRemoveBudget } from "@/services/hooks/budgetHook"
+import CurrencyFormatter from "./CurrencyFormatter"
 
 interface BudgetCardProps {
   budget: Budget
@@ -84,7 +85,7 @@ function BudgetCard({ budget }: BudgetCardProps) {
             <div className="flex justify-between text-sm mb-2">
               <span className="text-muted-foreground">Budget</span>
               <span className="font-medium">
-                Rp {budget.amount.toLocaleString("id-ID")}
+                <CurrencyFormatter amount={budget.amount} />
               </span>
             </div>
             <Progress value={percentage} className="h-2" />
@@ -95,13 +96,13 @@ function BudgetCard({ budget }: BudgetCardProps) {
             <div>
               <p className="text-muted-foreground mb-1">Used</p>
               <p className="font-semibold text-destructive">
-                Rp {budget.spent.toLocaleString("id-ID")}
+                <CurrencyFormatter amount={budget.spent} />
               </p>
             </div>
             <div>
               <p className="text-muted-foreground mb-1">Remaining</p>
               <p className={`font-semibold ${status.color}`}>
-                Rp {Math.max(0, remaining).toLocaleString("id-ID")}
+                <CurrencyFormatter amount={Math.max(0, remaining)} />
               </p>
             </div>
           </div>

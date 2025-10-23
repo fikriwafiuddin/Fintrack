@@ -34,6 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
+import CurrencyFormatter from "./CurrencyFormatter"
 
 type TransactionCardProps = {
   transaction: Transaction<Category>
@@ -105,7 +106,7 @@ function TransactionCard({ transaction }: TransactionCardProps) {
                 }`}
               >
                 {transaction.type === "income" ? "+" : "-"}
-                Rp {transaction.amount.toLocaleString("id-ID")}
+                <CurrencyFormatter amount={transaction.amount} />
               </p>
               {transaction.notes && (
                 <p className="text-xs text-muted-foreground mt-1 max-w-xs truncate">
@@ -122,7 +123,7 @@ function TransactionCard({ transaction }: TransactionCardProps) {
                 }`}
               >
                 {transaction.type === "income" ? "+" : "-"}
-                Rp {transaction.amount.toLocaleString("id-ID")}
+                <CurrencyFormatter amount={transaction.amount} />
               </p>
               <p className="text-xs text-muted-foreground">
                 {transaction.type === "income" ? "Income" : "Expense"}

@@ -1,3 +1,4 @@
+import CurrencyFormatter from "@/components/CurrencyFormatter"
 import CustomTooltip from "@/components/CustomTooltip"
 import { AlertTitle } from "@/components/ui/alert"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -123,7 +124,7 @@ function CategoryBreakDown({
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-medium">
-                        Rp {item.amount.toLocaleString("id-ID")}
+                        <CurrencyFormatter amount={item.amount} />
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {item.percentage.toFixed(1)}%

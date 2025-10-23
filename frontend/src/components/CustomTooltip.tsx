@@ -3,6 +3,7 @@ import type {
   NameType,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent"
+import CurrencyFormatter from "./CurrencyFormatter"
 
 type CustomTooltipProps = TooltipProps<ValueType, NameType>
 
@@ -24,7 +25,9 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
             <p className="text-muted-foreground">
               {entry.name}:{" "}
               <span className="font-medium text-popover-foreground">
-                Rp {entry.value?.toLocaleString("id-ID")}
+                <CurrencyFormatter
+                  amount={typeof entry?.value === "number" ? entry.value : 0}
+                />
               </span>
             </p>
           </div>

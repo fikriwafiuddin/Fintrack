@@ -46,6 +46,7 @@ import type { AxiosError } from "axios"
 import { useGetAllCategories } from "@/services/hooks/categoryHook"
 import { useMemo } from "react"
 import CategoryItemSkeleton from "./CategoryItemSkeleton"
+import { useUserPreference } from "@/store/useUserPreference"
 
 interface TransactionFormProps {
   transaction?: Transaction<string>
@@ -70,6 +71,7 @@ function TransactionForm({ transaction }: TransactionFormProps) {
   const { data: categoryData, isPending: isCategoriesLoading } =
     useGetAllCategories()
   const navigate = useNavigate()
+  const currencyCode = useUserPreference((state) => state.currencyCode)
 
   const currentType = form.watch("type")
 
@@ -213,7 +215,7 @@ function TransactionForm({ transaction }: TransactionFormProps) {
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount (Rp)</FormLabel>
+                  <FormLabel>Amount ({currencyCode})</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="0"

@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useGetSummary } from "@/services/hooks/dashboardHook"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import CurrencyFormatter from "@/components/CurrencyFormatter"
 
 const StatCardSkeleton = () => (
   <Card className="h-28">
@@ -116,7 +117,7 @@ function StatsCard() {
                       Income {selectedPeriod}
                     </p>
                     <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                      Rp {summaryData.totalIncome.toLocaleString("id-ID")}
+                      <CurrencyFormatter amount={summaryData.totalIncome} />
                     </p>
                   </div>
                 </div>
@@ -135,7 +136,7 @@ function StatsCard() {
                       Expenses {selectedPeriod}
                     </p>
                     <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                      Rp {summaryData.totalExpense.toLocaleString("id-ID")}
+                      <CurrencyFormatter amount={summaryData.totalExpense} />
                     </p>
                   </div>
                 </div>
@@ -172,7 +173,7 @@ function StatsCard() {
                           : "text-orange-600 dark:text-orange-400"
                       }`}
                     >
-                      Rp {Math.abs(netDifference).toLocaleString("id-ID")}
+                      <CurrencyFormatter amount={Math.abs(netDifference)} />
                     </p>
                   </div>
                 </div>

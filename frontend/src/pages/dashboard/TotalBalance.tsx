@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useGetBalance } from "@/services/hooks/dashboardHook"
 import { WalletIcon, AlertTriangle } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
+import CurrencyFormatter from "@/components/CurrencyFormatter"
 
 const BalanceSkeleton = () => (
   <Card className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
@@ -58,7 +59,7 @@ function TotalBalance() {
           <div>
             <p className="text-primary-foreground text-sm">Total Balance</p>
             <h2 className="text-3xl font-bold">
-              Rp {currentBalance.toLocaleString("id-ID")}
+              <CurrencyFormatter amount={currentBalance} />
             </h2>
           </div>
           <WalletIcon className="h-12 w-12 text-primary-foreground/80" />
