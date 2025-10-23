@@ -21,6 +21,7 @@ This application aims to manage expenses and income.
 - Shadcn
 - Tailwind css
 - Axios
+- Zustand
 
 **Backend:**
 

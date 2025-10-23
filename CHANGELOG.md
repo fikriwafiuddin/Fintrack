@@ -80,3 +80,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Nothing yet
+
+## [2.0.0] - 2025-10-23
+
+### Added
+
+- Add new field currency in user model
+- Add feature setting
+- Add Zustand
+
+### Fixed
+
+- Nothing yet
+
+### Removed
+
+- Nothing yet
