@@ -14,7 +14,7 @@ const show = async (user) => {
 const update = async (request, user) => {
   const { currency } = validation(settingValidation.update, request)
 
-  let userPreference = await User.findOne({ user })
+  let userPreference = await User.findOne({ userId: user })
   if (!userPreference) {
     userPreference = new User({ userId: user })
   }
