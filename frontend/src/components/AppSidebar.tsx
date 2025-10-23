@@ -18,6 +18,7 @@ import {
   WalletIcon,
   PiggyBankIcon,
   BotIcon,
+  Tags,
 } from "lucide-react"
 import { Link, useLocation } from "react-router"
 
@@ -50,12 +51,17 @@ const navigation = [
   {
     name: "Categories",
     href: "/categories",
-    icon: Settings,
+    icon: Tags,
   },
   {
     name: "Ask AI",
     href: "/ask-ai",
     icon: BotIcon,
+  },
+  {
+    name: "Settings",
+    href: "/settings",
+    icon: Settings,
   },
 ]
 

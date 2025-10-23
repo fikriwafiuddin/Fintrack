@@ -82,6 +82,16 @@ export interface TransactionFilter {
   sort: "asc" | "desc"
 }
 
+export type CurrencyCode =
+  | "IDR"
+  | "USD"
+  | "EUR"
+  | "GBP"
+  | "JPY"
+  | "SGD"
+  | "MYR"
+  | "THB"
+
 export interface CategoryFieldErrors {
   name?: string[]
   type?: string[]

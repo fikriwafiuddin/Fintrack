@@ -1,3 +1,4 @@
+import type { CurrencyCode } from "@/types"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -19,4 +20,14 @@ export function getContrastColor(hex: string): string {
 
   // kalau terang → pakai hitam, kalau gelap → pakai putih
   return luminance > 0.5 ? "#000000" : "#FFFFFF"
+}
+
+export const formatCurrencyValue = (
+  amount: number,
+  code: CurrencyCode
+): string => {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: code,
+  }).format(amount)
 }

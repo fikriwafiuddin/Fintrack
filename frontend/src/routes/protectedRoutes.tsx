@@ -6,6 +6,7 @@ import CategoriesPage from "@/pages/categories/page"
 import DashboardPage from "@/pages/dashboard/page"
 import LandingPage from "@/pages/landing/page"
 import ReportsPage from "@/pages/reports/page"
+import SettingsPage from "@/pages/settings/page"
 import TransactionsPage from "@/pages/transactions/page"
 import { createBrowserRouter } from "react-router"
 
@@ -44,6 +45,10 @@ const protectedRoutes = createBrowserRouter([
       {
         path: "ask-ai",
         Component: AskAIPage,
+      },
+      {
+        path: "settings",
+        Component: SettingsPage,
       },
     ],
   },
