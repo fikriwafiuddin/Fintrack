@@ -20,6 +20,9 @@ import { useGetAllTransactions } from "@/services/hooks/transactionHook"
 import { useGetAllCategories } from "@/services/hooks/categoryHook"
 import TransactionCard from "@/components/TransactionCard"
 import TransactionRowSkeleton from "@/components/TransactionRowSkeleton"
+import { Label } from "@/components/ui/label"
+import DatePicker from "@/components/DatePicker"
+import AppPagination from "@/components/AppPagination"
 
 const CategoryItemSkeleton = () =>
   [...Array(6)].map((_, index) => (
@@ -33,15 +36,22 @@ const CategoryItemSkeleton = () =>
   ))
 
 function TransactionsPage() {
+  const [startDate, setStartDate] = useState<Date>(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  )
+  const [endDate, setEndDate] = useState<Date>(
+    new Date(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0))
+  )
   const [filter, setFilter] = useState<TransactionFilter>({
     sort: "asc",
   } as TransactionFilter)
+  const [page, setPage] = useState<number>(1)
   const { data: transactionData, isPending: isTransactionsLoading } =
-    useGetAllTransactions(filter)
+    useGetAllTransactions({ ...filter, startDate, endDate, page })
   const { data: categoryData, isPending: isCategoriesLoading } =
     useGetAllCategories()
 
-  const transactions = transactionData || []
+  const transactions = transactionData?.transactions || []
   const allCategories = [
     ...(categoryData?.defaultCategories || []),
     ...(categoryData?.customCategories || []),
@@ -52,6 +62,7 @@ function TransactionsPage() {
       ...prev,
       [key]: value === "all" ? undefined : value,
     }))
+    setPage(1)
   }
 
   const handleSortOrder = (value: "asc" | "desc") => {
@@ -59,6 +70,17 @@ function TransactionsPage() {
       ...prev,
       sort: value,
     }))
+    setPage(1)
+  }
+
+  const handleStartDate = (date: Date) => {
+    setStartDate(date)
+    setPage(1)
+  }
+
+  const handleEndDate = (date: Date) => {
+    setEndDate(date)
+    setPage(1)
   }
 
   return (
@@ -122,8 +144,8 @@ function TransactionsPage() {
 
             {/* Category Filter */}
             <Select
-              value={filter.categoryId || "all"}
-              onValueChange={(value) => handleFilterChange("categoryId", value)}
+              value={filter.category || "all"}
+              onValueChange={(value) => handleFilterChange("category", value)}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="All Category" />
@@ -159,6 +181,20 @@ function TransactionsPage() {
               <ArrowUpDownIcon className="mr-2 h-4 w-4" />
               {filter.sort === "desc" ? "Latest" : "Oldest"}
             </Button>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4 max-w-md">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Label>From</Label>
+              <div className="flex-1">
+                <DatePicker value={startDate} onChange={handleStartDate} />
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Label>To</Label>
+              <div className="flex-1">
+                <DatePicker value={endDate} onChange={handleEndDate} />
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -197,6 +233,14 @@ function TransactionsPage() {
               ))}
             </div>
           )}
+
+          <div className="mt-4">
+            <AppPagination
+              currentPage={page}
+              onPageChange={setPage}
+              totalPages={transactionData?.pagination?.totalPages || 0}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

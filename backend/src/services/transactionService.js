@@ -374,16 +374,30 @@ const remove = async (request, user) => {
 }
 
 const getAll = async (request, user) => {
-  const { type = "all", category = "all", sort = "asc" } = request
+  const { type, category, sort, startDate, endDate, page } = validation(
+    transactionValidation.getAll,
+    request
+  )
+
+  const limit = 10
+  const skip = (page - 1) * limit
 
   const filter = {
     user,
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
   }
   if (type !== "all") filter.type = type
   if (category !== "all") filter.category = category
 
+  const totalData = await Transaction.countDocuments(filter)
+
   const transactions = await Transaction.find(filter)
     .sort({ date: sort === "asc" ? 1 : -1 })
+    .skip(skip)
+    .limit(limit)
     .populate({
       path: "category",
       select: "name icon color",
@@ -391,7 +405,21 @@ const getAll = async (request, user) => {
     })
     .select("amount category type date notes createdAt")
     .lean()
-  return transactions
+
+  return {
+    transactions,
+    pagination: {
+      currentPage: page,
+      totalPages: Math.ceil(totalData / limit),
+    },
+    filters: {
+      type,
+      category,
+      sort,
+      startDate,
+      endDate,
+    },
+  }
 }
 
 const transactionService = {

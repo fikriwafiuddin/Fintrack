@@ -1,5 +1,12 @@
 import { axiosInstance } from "@/lib/axios"
-import type { FormDataTransaction, TransactionFilter } from "@/types"
+import type {
+  Category,
+  FormDataTransaction,
+  SuccessResponse,
+  Transaction,
+  TransactionFilter,
+} from "@/types"
+import type { AxiosResponse } from "axios"
 
 const create = async (
   data: Omit<FormDataTransaction, "time">,
@@ -36,13 +43,19 @@ const remove = async (id: string, token: string) => {
 }
 
 const getAll = async (request: TransactionFilter, token: string) => {
-  const response = await axiosInstance.get("/transactions", {
+  const response: AxiosResponse<
+    SuccessResponse<{ transactions: Transaction<Category>[] }>
+  > = await axiosInstance.get("/transactions", {
     params: request,
     headers: {
       Authorization: `Bearer ${token}`,
     },
   })
-  return response.data
+  return {
+    transactions: response.data.data.transactions,
+    filters: response.data.meta.filters,
+    pagination: response.data.meta.pagination,
+  }
 }
 
 const transactionApi = {

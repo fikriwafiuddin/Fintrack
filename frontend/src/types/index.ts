@@ -12,7 +12,22 @@ export interface SuccessResponse<TData> {
   data: TData
   meta: {
     timestamp: string
+    pagination?: Pagination
+    filters?: Filters
   }
+}
+
+export type Pagination = {
+  currentPage?: number
+  totalPages?: number
+}
+
+export type Filters = {
+  type?: string
+  category?: string
+  sort?: "asc" | "dsc"
+  startDate?: Date
+  endDate?: Date
 }
 
 // Type error response from API
@@ -75,12 +90,13 @@ export type BreakdownCategoryItem = {
 }
 
 export interface TransactionFilter {
-  categoryId?: string
+  category?: string
   type?: "income" | "expense"
   startDate?: Date
   endDate?: Date
   searchTerm?: string
   sort: "asc" | "desc"
+  page: number
 }
 
 export type CurrencyCode =

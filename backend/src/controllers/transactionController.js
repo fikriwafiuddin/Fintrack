@@ -57,12 +57,20 @@ const getAll = async (req, res, next) => {
     const user = req.user
     const request = req.query
 
-    const transactions = await transactionService.getAll(request, user)
+    const { transactions, pagination, filters } =
+      await transactionService.getAll(request, user)
 
     return res.status(200).json(
-      new SuccessResponse("Transactions successfully retrieved", {
-        transactions,
-      })
+      new SuccessResponse(
+        "Transactions successfully retrieved",
+        {
+          transactions,
+        },
+        {
+          pagination,
+          filters,
+        }
+      )
     )
   } catch (error) {
     next(error)

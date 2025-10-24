@@ -81,9 +81,67 @@ const remove = z.object({
     .length(24, "Invalid ID format"),
 })
 
+const enumType = ["all", "income", "expense"]
+const enumSort = ["asc", "desc"]
+
+const getAll = z.object({
+  type: z
+    .enum(enumType, {
+      invalid_type_error: "Type must be all, income, or expense",
+    })
+    .default("all"),
+  category: z
+    .string({
+      invalid_type_error: "Category must be a string",
+    })
+    .default("all"),
+  sort: z
+    .enum(enumSort, {
+      invalid_type_error: "Sort must be asc or desc",
+    })
+    .default("asc"),
+  startDate: z
+    .string({
+      required_error: "Start date is required",
+      invalid_type_error: "Start date must be a string",
+    })
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Start date must be a valid date string",
+    })
+    .default(
+      new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString()
+    ),
+  endDate: z
+    .string({
+      required_error: "End date is required",
+      invalid_type_error: "End date must be a string",
+    })
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "End date must be a valid date string",
+    })
+    .default(
+      new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        0
+      ).toISOString()
+    ),
+  page: z
+    .preprocess(
+      (val) => Number(val),
+      z
+        .number({
+          invalid_type_error: "Page must be number",
+        })
+        .positive("Page must be positive number")
+    )
+    .default(1),
+})
+
 const transactionValidation = {
   create,
   update,
   remove,
+  getAll,
 }
 export default transactionValidation

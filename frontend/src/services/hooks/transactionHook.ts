@@ -1,7 +1,9 @@
 import type {
   Category,
   ErrorResponse,
+  Filters,
   FormDataTransaction,
+  Pagination,
   SuccessResponse,
   Transaction,
   TransactionFieldErrors,
@@ -127,9 +129,12 @@ export const useGetAllTransactions = (request: TransactionFilter) => {
   const { getToken } = useAuth()
 
   return useQuery<
-    SuccessResponse<{ transactions: Transaction<Category>[] }>,
-    ErrorResponse,
-    Transaction<Category>[]
+    {
+      transactions: Transaction<Category>[]
+      filters?: Filters
+      pagination?: Pagination
+    },
+    ErrorResponse
   >({
     queryKey: queryKeyTransactions(request),
     queryFn: async () => {
@@ -138,9 +143,6 @@ export const useGetAllTransactions = (request: TransactionFilter) => {
         throw new Error("Authentication token is missing")
       }
       return await transactionApi.getAll(request, token)
-    },
-    select: (data) => {
-      return data.data.transactions
     },
     staleTime: 5 * 60 * 1000,
   })
