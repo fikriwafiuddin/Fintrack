@@ -3,7 +3,7 @@ import settingValidation from "../validations/settingValidation.js"
 import validation from "../validations/validation.js"
 
 const show = async (user) => {
-  let userPreference = await User.findOne({ user }).select("currency")
+  let userPreference = await User.findOne({ userId: user }).select("currency")
   if (!userPreference) {
     userPreference = await User.create({ userId: user })
   }
