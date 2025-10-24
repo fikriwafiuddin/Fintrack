@@ -8,7 +8,6 @@ type CurrencyFormatterProps = {
 
 function CurrencyFormatter({ amount }: CurrencyFormatterProps) {
   const currencyCode = useUserPreference((state) => state.currencyCode)
-  console.log(currencyCode)
   const formattedValue = useMemo(() => {
     return formatCurrencyValue(amount, currencyCode)
   }, [amount, currencyCode])
