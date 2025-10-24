@@ -4,6 +4,7 @@ import AskAIPage from "@/pages/ask-AI/page"
 import BudgetsPage from "@/pages/budgets/page"
 import CategoriesPage from "@/pages/categories/page"
 import DashboardPage from "@/pages/dashboard/page"
+import NotFound from "@/pages/error/NotFound"
 import LandingPage from "@/pages/landing/page"
 import ReportsPage from "@/pages/reports/page"
 import SettingsPage from "@/pages/settings/page"
@@ -51,6 +52,10 @@ const protectedRoutes = createBrowserRouter([
         Component: SettingsPage,
       },
     ],
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ])
 
