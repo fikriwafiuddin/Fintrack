@@ -16,6 +16,7 @@ import {
 import { useState } from "react"
 import CategoryForm from "./CategoryForm"
 import { useRemoveCategory } from "@/services/hooks/categoryHook"
+import { getContrastColor } from "@/lib/utils"
 
 interface CategoryCardProps {
   category: Category
@@ -65,8 +66,11 @@ function CategoryCard({ category }: CategoryCardProps) {
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3 flex-1">
             <div
-              className="w-12 h-12 rounded-full flex items-center justify-center text-white font-medium"
-              style={{ backgroundColor: category.color }}
+              className="w-12 h-12 rounded-full flex items-center justify-center font-medium"
+              style={{
+                backgroundColor: category.color,
+                color: getContrastColor(category.color),
+              }}
             >
               {category.name.charAt(0).toUpperCase()}
             </div>
