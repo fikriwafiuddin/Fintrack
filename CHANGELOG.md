@@ -111,3 +111,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Nothing yet
+
+## [2.2.1] - 2025-10-25
+
+### Added
+
+- Pagination and date filter on get all transactions
+- contrast color on category card
+
+### Fixed
+
+- Fix previous user preferences after currency refresh back to IDR
+
+### Removed
+
+- Nothing yet
