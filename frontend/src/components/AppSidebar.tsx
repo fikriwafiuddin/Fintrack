@@ -21,6 +21,7 @@ import {
   Tags,
 } from "lucide-react"
 import { Link, useLocation } from "react-router"
+import { useSidebar } from "@/components/ui/sidebar"
 
 const navigation = [
   {
@@ -67,6 +68,7 @@ const navigation = [
 
 export function AppSidebar() {
   const location = useLocation()
+  const { isMobile, setOpenMobile } = useSidebar()
 
   return (
     <Sidebar collapsible="icon">
@@ -92,7 +94,12 @@ export function AppSidebar() {
                     isActive={item.href === location.pathname}
                     asChild
                   >
-                    <Link to={item.href}>
+                    <Link
+                      to={item.href}
+                      onClick={() => {
+                        if (isMobile) setOpenMobile(false)
+                      }}
+                    >
                       <item.icon />
                       {item.name}
                     </Link>
