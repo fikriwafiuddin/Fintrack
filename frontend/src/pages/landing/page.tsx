@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/ModeToggle"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -20,7 +21,10 @@ const LandingPage = () => {
     )
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary">
+    <div className="relative min-h-screen bg-gradient-to-br from-background to-secondary">
+      <div className="absolute top-3 right-3">
+        <ModeToggle />
+      </div>
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">

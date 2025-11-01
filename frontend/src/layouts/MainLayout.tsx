@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/AppSidebar"
+import { ModeToggle } from "@/components/ModeToggle"
 import {
   SidebarInset,
   SidebarProvider,
@@ -37,7 +38,8 @@ function MainLayout() {
         <main className="p-4 flex-1">
           <header className="flex justify-between">
             <SidebarTrigger />
-            <div className="">
+            <div className="flex items-center gap-4">
+              <ModeToggle />
               <SignedIn>
                 <UserButton />
               </SignedIn>

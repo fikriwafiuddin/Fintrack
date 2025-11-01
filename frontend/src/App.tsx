@@ -3,6 +3,7 @@ import { useAuth } from "@clerk/clerk-react"
 import publicRoutes from "./routes/publicRoutes"
 import protectedRoutes from "./routes/protectedRoutes"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ThemeProvider } from "./components/ThemeProvider"
 
 const queryClient = new QueryClient()
 
@@ -20,7 +21,14 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={userId ? protectedRoutes : publicRoutes} />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <RouterProvider router={userId ? protectedRoutes : publicRoutes} />
+        </ThemeProvider>
       </QueryClientProvider>
     </>
   )
