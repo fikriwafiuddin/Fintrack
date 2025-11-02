@@ -78,9 +78,9 @@ const getSummary = async (request, user) => {
 
   return {
     totalIncome: incomeSummary?.totalAmount || 0,
-    totalExpense: expenseSummary?.totalExpense || 0,
+    totalExpense: expenseSummary?.totalAmount || 0,
     difference:
-      (incomeSummary?.totalIncome || 0) - (expenseSummary?.totalAmount || 0),
+      (incomeSummary?.totalAmount || 0) - (expenseSummary?.totalAmount || 0),
     totalTransactions,
     expenseCategoryBreakdown: expenseCategoryBreakdown || [],
     incomeCategoryBreakdown: incomeCategoryBreakdown || [],
