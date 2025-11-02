@@ -141,3 +141,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Nothing yet
+
+## [2.3.3] - 2025-11-2
+
+### Added
+
+- Nothing yet
+
+### Fixed
+
+- Nothing yet
+
+### Removed
+
+- Nothing yet
