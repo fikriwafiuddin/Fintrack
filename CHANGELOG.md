@@ -126,3 +126,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Nothing yet
+
+## [2.3.2] - 2025-11-2
+
+### Added
+
+- User can send feedback
+- Darkmode and lightmode
+
+### Fixed
+
+- The sidebar will close automatically when the user presses the navigation button (only on mobile screens)
+
+### Removed
+
+- Nothing yet
