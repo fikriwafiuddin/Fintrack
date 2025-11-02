@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { MessageSquareTextIcon } from "lucide-react"
+import { Loader2Icon, MessageSquareTextIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { feedbackValidation } from "@/lib/validations/feedback-validation"
@@ -21,12 +21,14 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import type { FormDataFeedback } from "@/types"
+import { useCreateFeedback } from "@/services/hooks/feedbackHook"
 
 function FeedbackPage() {
   const form = useForm({ resolver: zodResolver(feedbackValidation.create) })
+  const { mutate: send, isPending: sending } = useCreateFeedback()
 
   const onSubmit = (data: FormDataFeedback) => {
-    console.log("Feedback submitted:", data)
+    send(data)
   }
 
   return (
@@ -81,12 +83,11 @@ function FeedbackPage() {
               />
 
               <Button
-                // onClick={handleSubmitFeedback}
-                // disabled={isSubmittingFeedback || !feedbackSubject.trim() || !feedbackMessage.trim()}
+                type="submit"
+                disabled={sending}
                 className="w-full sm:w-auto"
               >
-                Send
-                {/* {isSubmittingFeedback ? 'Mengirim...' : 'Kirim Feedback'} */}
+                {sending ? <Loader2Icon className="animate-spin" /> : "Send"}
               </Button>
             </form>
           </Form>

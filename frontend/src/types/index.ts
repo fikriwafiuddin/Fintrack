@@ -82,6 +82,15 @@ export type Chat = {
   messages: Message[]
 }
 
+export type Feedback = {
+  _id: string
+  user: string
+  subject: string
+  message: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 export type BreakdownCategoryItem = {
   _id: number
   name: string
@@ -134,6 +143,11 @@ export interface BudgetFieldErrors {
   period?: string[]
   startDate?: string[]
   endDate?: string[]
+}
+
+export interface FeedbackFieldErrors {
+  subject?: string[]
+  message?: string[]
 }
 
 export type FormDataTransaction = z.infer<typeof transactionValidation.add>
