@@ -40,9 +40,9 @@ function FeedbackPage() {
               <MessageSquareTextIcon className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Kritik & Saran</CardTitle>
+              <CardTitle>Feedback</CardTitle>
               <CardDescription>
-                Bantu kami meningkatkan aplikasi dengan feedback Anda
+                Help us improve the app with your feedback
               </CardDescription>
             </div>
           </div>
