@@ -19,6 +19,7 @@ import {
   PiggyBankIcon,
   BotIcon,
   Tags,
+  MessageSquareText,
 } from "lucide-react"
 import { Link, useLocation } from "react-router"
 import { useSidebar } from "@/components/ui/sidebar"
@@ -63,6 +64,11 @@ const navigation = [
     name: "Settings",
     href: "/settings",
     icon: Settings,
+  },
+  {
+    name: "Feedback",
+    href: "/feedback",
+    icon: MessageSquareText,
   },
 ]
 

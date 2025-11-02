@@ -5,6 +5,7 @@ import BudgetsPage from "@/pages/budgets/page"
 import CategoriesPage from "@/pages/categories/page"
 import DashboardPage from "@/pages/dashboard/page"
 import NotFound from "@/pages/error/NotFound"
+import FeedbackPage from "@/pages/feedback/page"
 import LandingPage from "@/pages/landing/page"
 import ReportsPage from "@/pages/reports/page"
 import SettingsPage from "@/pages/settings/page"
@@ -50,6 +51,10 @@ const protectedRoutes = createBrowserRouter([
       {
         path: "settings",
         Component: SettingsPage,
+      },
+      {
+        path: "feedback",
+        Component: FeedbackPage,
       },
     ],
   },

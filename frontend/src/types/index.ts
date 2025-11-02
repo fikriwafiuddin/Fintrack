@@ -1,6 +1,7 @@
 import type budgetValidation from "@/lib/validations/budget-validation"
 import type categoryValidation from "@/lib/validations/category-validation"
 import type chatValidation from "@/lib/validations/chat-validation"
+import type { feedbackValidation } from "@/lib/validations/feedback-validation"
 import type settingValidation from "@/lib/validations/setting-validation"
 import type transactionValidation from "@/lib/validations/transaction-validation"
 import { z } from "zod"
@@ -140,3 +141,4 @@ export type FormDataCategory = z.infer<typeof categoryValidation.add>
 export type FormDataBudget = z.infer<typeof budgetValidation.add>
 export type FormDataAskAI = z.infer<typeof chatValidation.askAI>
 export type FormDataSetting = z.infer<typeof settingValidation.update>
+export type FormDataFeedback = z.infer<typeof feedbackValidation.create>
