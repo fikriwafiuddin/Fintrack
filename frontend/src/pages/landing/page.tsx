@@ -169,7 +169,7 @@ const LandingPage = () => {
             )}
           </Button>
         </div>
-        <p className="text-sm ml-1 pb-1">v2.2.1</p>
+        <p className="text-sm ml-1 pb-1">v2.3.2</p>
       </div>
     </div>
   )
