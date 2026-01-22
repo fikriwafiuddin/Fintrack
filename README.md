@@ -1,4 +1,4 @@
-## Fintrack
+## Mivro
 
 This application aims to manage expenses and income.
 
@@ -47,8 +47,8 @@ This application aims to manage expenses and income.
 
 ### 1 Clone Repository
 
-git clone https://github.com/fikriwafiuddin/Fintrack.git
-cd Fintract
+git clone https://github.com/fikriwafiuddin/Mivro.git
+cd Mivro
 
 ### 2 Setup Backend
 
@@ -64,7 +64,7 @@ pnpm run dev
 
 ## Deployment / Demo
 
-https://fintrack-opal.vercel.app
+https://mivro-opal.vercel.app
 
 ## Notes
 

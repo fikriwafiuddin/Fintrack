@@ -15,7 +15,6 @@ import {
   List,
   Settings,
   BarChart3,
-  WalletIcon,
   PiggyBankIcon,
   BotIcon,
   Tags,
@@ -83,9 +82,9 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <SidebarMenuButton className="text-sidebar-primary hover:text-primary hover:bg-transparent">
               <div>
-                <WalletIcon />
+                <img src="/logo.webp" alt="logo" className="size-7" />
               </div>
-              <span className="font-semibold text-xl">Fintrack</span>
+              <span className="font-bold text-xl">Mivro</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

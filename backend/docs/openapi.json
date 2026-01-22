@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Fintrack API",
+    "title": "Mivro API",
     "version": "1.1.1",
     "description": "This is a sample server for a financial tracking application.",
     "license": {

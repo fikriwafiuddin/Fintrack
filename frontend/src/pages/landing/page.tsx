@@ -29,7 +29,7 @@ const LandingPage = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-primary underline">
-            FINTRACK
+            MIVRO
           </h1>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
             Manage Your Finances <span className="text-primary">Easily</span>
