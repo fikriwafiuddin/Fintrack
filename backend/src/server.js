@@ -11,10 +11,10 @@ const PORT = process.env.PORT || 5000
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: (process.env.CORS_ORIGIN || "http://localhost:5173").split(","),
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
-  })
+  }),
 )
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
