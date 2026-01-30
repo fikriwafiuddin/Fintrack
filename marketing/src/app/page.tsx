@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { ModeToggle } from "@/components/ModeToggle"
 import NavigationButtons from "@/components/NavigationButtons"
 import { Button } from "@/components/ui/button"
@@ -16,6 +17,31 @@ import {
   WalletIcon,
 } from "lucide-react"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "MIVRO - Manage Your Personal Finances Easily",
+  description:
+    "The best personal finance management app to track expenses and income, manage budgets, view monthly financial reports, and get insights from AI assistant. Free and easy to use.",
+  keywords: [
+    "aplikasi keuangan gratis",
+    "pencatat keuangan",
+    "budget planner",
+    "expense tracker Indonesia",
+    "manajemen uang",
+    "laporan keuangan pribadi",
+    "MIVRO",
+    "MIVRO - Manage Your Personal Finances Easily",
+    "MIVRO - Personal Finance Management App",
+    "MIVRO - Personal Finance Management App",
+  ],
+  openGraph: {
+    title: "MIVRO - Manage Your Personal Finances Easily",
+    description:
+      "Track expenses, set budgets, and achieve your financial goals with MIVRO. Free and easy to use!",
+    url: "https://www.mivro.my.id",
+    type: "website",
+  },
+}
 
 export default async function Home() {
   const { userId } = await auth()

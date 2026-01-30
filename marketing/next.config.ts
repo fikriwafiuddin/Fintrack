@@ -1,7 +1,15 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   /* config options here */
-};
+  trailingSlash: false,
+  compress: true,
+  poweredByHeader: false,
 
-export default nextConfig;
+  // Image optimization
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
+}
+
+export default nextConfig

@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+
+# Disallow auth pages from being indexed
+Disallow: /auth/
+Disallow: /sign-in/
+Disallow: /sign-up/
+
+# Sitemap
+Sitemap: https://mivro-opal.vercel.app/sitemap.xml
