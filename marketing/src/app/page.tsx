@@ -87,7 +87,7 @@ export default async function Home() {
               <PieChartIcon className="h-8 w-8 text-primary mb-2" />
               <CardTitle>Financial Analysis</CardTitle>
               <CardDescription>
-                Visualisasi data keuangan dengan grafik yang mudah dipahami
+                Visualize financial data with easy-to-understand graphs
               </CardDescription>
             </CardHeader>
           </Card>
@@ -107,7 +107,7 @@ export default async function Home() {
               <ShieldIcon className="h-8 w-8 text-primary mb-2" />
               <CardTitle>Safe & Trusted</CardTitle>
               <CardDescription>
-                Data Anda tersimpan dengan aman dan dapat diakses kapan saja
+                Your data is stored securely and can be accessed anytime
               </CardDescription>
             </CardHeader>
           </Card>
