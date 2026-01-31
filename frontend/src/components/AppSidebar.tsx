@@ -19,7 +19,9 @@ import {
   BotIcon,
   Tags,
   MessageSquareText,
+  RefreshCw,
 } from "lucide-react"
+
 import { Link, useLocation } from "react-router"
 import { useSidebar } from "@/components/ui/sidebar"
 
@@ -40,10 +42,16 @@ const navigation = [
     icon: List,
   },
   {
+    name: "Recurring",
+    href: "/recurrings",
+    icon: RefreshCw,
+  },
+  {
     name: "Budgets",
     href: "/budgets",
     icon: PiggyBankIcon,
   },
+
   {
     name: "Reports",
     href: "/reports",

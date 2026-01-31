@@ -9,6 +9,7 @@ import budgetRouter from "./budgetRouter.js"
 import chatRouter from "./chatRouter.js"
 import settingRouter from "./settingRouter.js"
 import feedbackRouter from "./feedbackRouter.js"
+import recurringRouter from "./recurringRouter.js"
 
 const router = express.Router()
 
@@ -20,9 +21,10 @@ router.use("/report", reportRouter)
 router.use("/chats", chatRouter)
 router.use("/settings", settingRouter)
 router.use("/feedback", feedbackRouter)
+router.use("/recurrings", recurringRouter)
 
 router.all(/.*/, (req, res) =>
-  res.status(404).json(new ErrorResponse("Route not found", 404))
+  res.status(404).json(new ErrorResponse("Route not found", 404)),
 )
 
 router.use(errorMiddleware)

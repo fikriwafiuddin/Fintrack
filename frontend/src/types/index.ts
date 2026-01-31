@@ -4,6 +4,7 @@ import type chatValidation from "@/lib/validations/chat-validation"
 import type { feedbackValidation } from "@/lib/validations/feedback-validation"
 import type settingValidation from "@/lib/validations/setting-validation"
 import type transactionValidation from "@/lib/validations/transaction-validation"
+
 import { z } from "zod"
 
 // Type success response from API
@@ -57,6 +58,19 @@ export type Transaction<TCategory> = {
   type: "expense" | "income"
   amount: number
   date: Date
+  notes?: string
+}
+
+export type RecurringTransaction<TCategory> = {
+  _id: string
+  user: string
+  category: TCategory
+  type: "expense" | "income"
+  amount: number
+  frequency: "daily" | "weekly" | "monthly" | "yearly"
+  nextOccurrence: Date
+  lastExecuted: Date | null
+  status: "active" | "paused"
   notes?: string
 }
 

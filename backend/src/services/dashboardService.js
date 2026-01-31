@@ -2,8 +2,17 @@ import User from "../models/userModel.js"
 import { z } from "zod"
 import validation from "../validations/validation.js"
 import Transaction from "../models/transactionModel.js"
+import recurringService from "./recurringService.js"
 
 const getBalance = async (user) => {
+  // Process any pending recurring transactions (Lazy Evaluation)
+  try {
+    await recurringService.processRecurrings(user)
+  } catch (error) {
+    // Log error but don't fail the request
+    console.error("Error processing recurring transactions:", error)
+  }
+
   let userData = await User.findOne({ userId: user })
   if (!userData) {
     userData = new User({ userId: user, balance: 0 })

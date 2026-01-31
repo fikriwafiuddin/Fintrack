@@ -10,6 +10,7 @@ import LandingPage from "@/pages/landing/page"
 import ReportsPage from "@/pages/reports/page"
 import SettingsPage from "@/pages/settings/page"
 import TransactionsPage from "@/pages/transactions/page"
+import RecurringTransactionsPage from "@/pages/recurrings/page"
 import { createBrowserRouter } from "react-router"
 
 const protectedRoutes = createBrowserRouter([
@@ -55,6 +56,10 @@ const protectedRoutes = createBrowserRouter([
       {
         path: "feedback",
         Component: FeedbackPage,
+      },
+      {
+        path: "recurrings",
+        Component: RecurringTransactionsPage,
       },
     ],
   },
