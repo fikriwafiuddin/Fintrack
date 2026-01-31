@@ -1,12 +1,15 @@
 import recurringService from "../services/recurringService.js"
 import { SuccessResponse } from "../utils/response.js"
+import validation from "../validations/validation.js"
+import recurringValidation from "../validations/recurringValidation.js"
 
 const create = async (req, res, next) => {
   try {
     const request = req.body
     const user = req.user
 
-    const recurring = await recurringService.create(request, user)
+    const validatedRequest = validation(recurringValidation.create, request)
+    const recurring = await recurringService.create(validatedRequest, user)
 
     return res.status(201).json(
       new SuccessResponse("Recurring transaction successfully created", {
@@ -23,7 +26,8 @@ const update = async (req, res, next) => {
     const request = { ...req.body, id: req.params.id }
     const user = req.user
 
-    const recurring = await recurringService.update(request, user)
+    const validatedRequest = validation(recurringValidation.update, request)
+    const recurring = await recurringService.update(validatedRequest, user)
 
     return res.status(200).json(
       new SuccessResponse("Recurring transaction successfully updated", {
@@ -40,7 +44,8 @@ const updateStatus = async (req, res, next) => {
     const { id } = req.params
     const user = req.user
 
-    const recurring = await recurringService.updateStatus({ id }, user)
+    validation(recurringValidation.updateStatus, { id })
+    const recurring = await recurringService.updateStatus(id, user)
 
     return res.status(200).json(
       new SuccessResponse("Recurring transaction status updated", {
@@ -57,7 +62,8 @@ const remove = async (req, res, next) => {
     const { id } = req.params
     const user = req.user
 
-    const recurring = await recurringService.remove({ id }, user)
+    validation(recurringValidation.remove, { id })
+    const recurring = await recurringService.remove(id, user)
 
     return res.status(200).json(
       new SuccessResponse("Recurring transaction successfully deleted", {
@@ -74,7 +80,8 @@ const getAll = async (req, res, next) => {
     const user = req.user
     const request = req.query
 
-    const recurrings = await recurringService.getAll(request, user)
+    const validatedRequest = validation(recurringValidation.getAll, request)
+    const recurrings = await recurringService.getAll(validatedRequest, user)
 
     return res.status(200).json(
       new SuccessResponse("Recurring transactions successfully retrieved", {

@@ -1,36 +1,10 @@
-import { z } from "zod"
 import validation from "../validations/validation.js"
 import CategorySummary from "../models/categorySummaryModel.js"
 import Transaction from "../models/transactionModel.js"
 import MonthlySummary from "../models/monthlySummaryModel.js"
 
-const getSummaryValidation = z.object({
-  month: z
-    .preprocess(
-      (val) => Number(val),
-      z
-        .number({
-          invalid_type_error: "Month must be a number",
-          required_error: "Month is required",
-        })
-        .int()
-        .min(0, "Month must be between 0 and 11")
-        .max(11, "Month must be between 0 and 11")
-    )
-    .default(new Date().getMonth()),
-  year: z
-    .preprocess(
-      (val) => Number(val),
-      z.number({
-        invalid_type_error: "Year must be a number",
-        required_error: "Year is required",
-      })
-    )
-    .default(new Date().getFullYear()),
-})
-
 const getSummary = async (request, user) => {
-  const { month, year } = validation(getSummaryValidation, request)
+  const { month, year } = request
 
   const categorySummary = await CategorySummary.find({
     month,
@@ -54,7 +28,7 @@ const getSummary = async (request, user) => {
         amount: element.amount,
         percentage: (element.amount / expenseSummary.totalAmount) * 100,
       })
-    }
+    },
   )
   const incomeCategoryBreakdown = incomeSummary?.categories.map(
     (element, index, arr) => {
@@ -65,7 +39,7 @@ const getSummary = async (request, user) => {
         amount: element.amount,
         percentage: (element.amount / incomeSummary.totalAmount) * 100,
       })
-    }
+    },
   )
 
   const startDate = new Date(year, Number(month), 1)

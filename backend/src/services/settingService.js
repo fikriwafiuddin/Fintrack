@@ -1,6 +1,4 @@
 import User from "../models/userModel.js"
-import settingValidation from "../validations/settingValidation.js"
-import validation from "../validations/validation.js"
 
 const show = async (user) => {
   let userPreference = await User.findOne({ userId: user }).select("currency")
@@ -11,8 +9,8 @@ const show = async (user) => {
   return { currency: userPreference.currency }
 }
 
-const update = async (request, user) => {
-  const { currency } = validation(settingValidation.update, request)
+const update = async (data, user) => {
+  const { currency } = data
 
   let userPreference = await User.findOne({ userId: user })
   if (!userPreference) {

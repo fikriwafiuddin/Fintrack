@@ -1,12 +1,15 @@
 import budgetService from "../services/budgetService.js"
 import { SuccessResponse } from "../utils/response.js"
+import budgetValidation from "../validations/budgetValidation.js"
+import validation from "../validations/validation.js"
 
 const create = async (req, res, next) => {
   try {
     const request = req.body
     const user = req.user
 
-    const budget = await budgetService.create(request, user)
+    const validatedRequest = validation(budgetValidation.create, request)
+    const budget = await budgetService.create(validatedRequest, user)
     return res
       .status(201)
       .json(new SuccessResponse("Budget successfully created", { budget }))
@@ -20,7 +23,8 @@ const update = async (req, res, next) => {
     const request = { ...req.body, id: req.params.id }
     const user = req.user
 
-    const budget = await budgetService.update(request, user)
+    const validatedRequest = validation(budgetValidation.update, request)
+    const budget = await budgetService.update(validatedRequest, user)
     return res
       .status(200)
       .json(new SuccessResponse("Budget successfull update", { budget }))
@@ -34,7 +38,9 @@ const remove = async (req, res, next) => {
     const id = req.params.id
     const user = req.user
 
-    const budget = await budgetService.remove({ id }, user)
+    validation(budgetValidation.remove, { id })
+
+    const budget = await budgetService.remove(id, user)
     return res
       .status(200)
       .json(new SuccessResponse("Budget successfull removed", { budget }))
@@ -48,15 +54,19 @@ const getAll = async (req, res, next) => {
     const user = req.user
     const request = req.query
 
-    const { budgets, filters } = await budgetService.getAll(request, user)
+    const validatedRequest = validation(budgetValidation.getAll, request)
+    const { budgets, filters } = await budgetService.getAll(
+      validatedRequest,
+      user,
+    )
     return res
       .status(200)
       .json(
         new SuccessResponse(
           "Budgets successfull retrieved",
           { budgets },
-          { filters }
-        )
+          { filters },
+        ),
       )
   } catch (error) {
     next(error)

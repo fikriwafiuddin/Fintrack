@@ -1,14 +1,9 @@
 import Budget from "../models/budgetModel.js"
 import Category from "../models/categoryModel.js"
 import { ErrorResponse } from "../utils/response.js"
-import budgetValidation from "../validations/budgetValidation.js"
-import validation from "../validations/validation.js"
 
-const create = async (request, user) => {
-  const { category, amount, period, startDate, endDate } = validation(
-    budgetValidation.create,
-    request
-  )
+const create = async (data, user) => {
+  const { category, amount, period, startDate, endDate } = data
 
   // 1. Check category is exist
   const categoryIsExist = await Category.findById(category)
@@ -59,11 +54,8 @@ const create = async (request, user) => {
   return budget
 }
 
-const update = async (request, user) => {
-  const { id, category, amount, period, startDate, endDate } = validation(
-    budgetValidation.update,
-    request
-  )
+const update = async (data, user) => {
+  const { id, category, amount, period, startDate, endDate } = data
 
   // 1. Check budget
   const budget = await Budget.findOne({ _id: id, user })
@@ -132,9 +124,7 @@ const update = async (request, user) => {
   return budget
 }
 
-const remove = async (request, user) => {
-  const { id } = validation(budgetValidation.remove, request)
-
+const remove = async (id, user) => {
   // 1. Check budget and remove
   const budget = await Budget.findOneAndDelete({ _id: id, user })
   if (!budget) {
@@ -145,7 +135,7 @@ const remove = async (request, user) => {
 }
 
 const getAll = async (request, user) => {
-  const { startDate, endDate } = validation(budgetValidation.getAll, request)
+  const { startDate, endDate } = request
 
   const filter = {
     user,

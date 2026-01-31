@@ -1,5 +1,7 @@
 import chatService from "../services/chatService.js"
 import { SuccessResponse } from "../utils/response.js"
+import validation from "../validations/validation.js"
+import chatValidation from "../validations/chatValidation.js"
 
 const show = async (req, res, next) => {
   try {
@@ -20,7 +22,8 @@ const askAI = async (req, res, next) => {
     const request = req.body
     const user = req.user
 
-    const data = await chatService.askAI(request, user)
+    const validatedRequest = validation(chatValidation.askAI, request)
+    const data = await chatService.askAI(validatedRequest, user)
 
     return res
       .status(200)

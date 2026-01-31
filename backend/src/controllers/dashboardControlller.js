@@ -1,5 +1,7 @@
 import dashboardService from "../services/dashboardService.js"
 import { SuccessResponse } from "../utils/response.js"
+import dashboardValidation from "../validations/dashboardValidation.js"
+import validation from "../validations/validation.js"
 
 const getBalance = async (req, res, next) => {
   try {
@@ -20,7 +22,8 @@ const getSummary = async (req, res, next) => {
     const user = req.user
     const request = req.query
 
-    const summary = await dashboardService.getSummary(request, user)
+    const validatedRequest = validation(dashboardValidation.summary, request)
+    const summary = await dashboardService.getSummary(validatedRequest, user)
 
     return res
       .status(200)
@@ -39,7 +42,7 @@ const getRecentTransactions = async (req, res, next) => {
     return res.status(200).json(
       new SuccessResponse("Racent transactions successfully retrieved", {
         transactions,
-      })
+      }),
     )
   } catch (error) {
     next(error)

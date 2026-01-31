@@ -3,8 +3,8 @@ import { ErrorResponse } from "../utils/response.js"
 import categoryValidation from "../validations/categoryValidation.js"
 import validation from "../validations/validation.js"
 
-const create = async (request, user) => {
-  const { name, type, color } = validation(categoryValidation.create, request)
+const create = async (data, user) => {
+  const { name, type, color } = data
 
   // 1. Check if custom category already exists
   const category = await Category.findOne({ name, user })
@@ -29,11 +29,8 @@ const create = async (request, user) => {
   return newCategory
 }
 
-const update = async (request, user) => {
-  const { id, name, type, color } = validation(
-    categoryValidation.update,
-    request
-  )
+const update = async (data, user) => {
+  const { id, name, type, color } = data
 
   // 1. Check if category exists
   const category = await Category.findOne({ _id: id, user })
@@ -73,9 +70,7 @@ const update = async (request, user) => {
   return category
 }
 
-const remove = async (request, user) => {
-  const { id } = validation(categoryValidation.remove, request)
-
+const remove = async (id, user) => {
   // 1. Check if category exists
   const category = await Category.findOne({ _id: id, user })
   if (!category) {

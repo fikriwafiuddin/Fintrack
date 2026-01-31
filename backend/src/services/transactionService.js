@@ -1,5 +1,3 @@
-import transactionValidation from "../validations/transactionValidation.js"
-import validation from "../validations/validation.js"
 import Transaction from "../models/transactionModel.js"
 import MonthlySummary from "../models/monthlySummaryModel.js"
 import CategorySummary from "../models/categorySummaryModel.js"
@@ -20,7 +18,7 @@ async function updateSummaries(
   userId,
   newTransaction,
   session,
-  oldTransaction = null
+  oldTransaction = null,
 ) {
   // ========================================
   // STEP 1: ROLLBACK TRANSAKSI LAMA
@@ -55,7 +53,7 @@ async function updateSummaries(
 
     if (oldCategorySummary) {
       const categoryIndex = oldCategorySummary.categories.findIndex(
-        (c) => c.category.toString() === oldTransaction.category.toString()
+        (c) => c.category.toString() === oldTransaction.category.toString(),
       )
 
       if (categoryIndex !== -1) {
@@ -141,7 +139,7 @@ async function updateSummaries(
   }
 
   const categoryIndex = categorySummary.categories.findIndex(
-    (c) => c.category.toString() === category.toString()
+    (c) => c.category.toString() === category.toString(),
   )
 
   if (categoryIndex !== -1) {
@@ -178,7 +176,7 @@ export const updateBudgets = async (
   user,
   newTransaction,
   session,
-  oldTransaction = null
+  oldTransaction = null,
 ) => {
   // Helper untuk update satu transaksi
   const applyBudgetChange = async (trx, sign) => {
@@ -211,11 +209,8 @@ export const updateBudgets = async (
   }
 }
 
-const create = async (request, user) => {
-  const { type, amount, category, date, notes } = validation(
-    transactionValidation.create,
-    request
-  )
+const create = async (data, user) => {
+  const { type, amount, category, date, notes } = data
 
   // 1. Check category
   const categoryIsExist = await Category.findOne({ _id: category })
@@ -244,7 +239,7 @@ const create = async (request, user) => {
     // 4. Create transaction
     const [transaction] = await Transaction.create(
       [{ user, type, amount, category, date, notes }],
-      { session }
+      { session },
     )
 
     // 5. Update summaries
@@ -264,11 +259,8 @@ const create = async (request, user) => {
   }
 }
 
-const update = async (request, user) => {
-  const { id, type, amount, category, date, notes } = validation(
-    transactionValidation.update,
-    request
-  )
+const update = async (data, user) => {
+  const { id, type, amount, category, date, notes } = data
 
   // 1. Check transaction
   const transaction = await Transaction.findOne({ _id: id, user })
@@ -340,9 +332,7 @@ const update = async (request, user) => {
   }
 }
 
-const remove = async (request, user) => {
-  const { id } = validation(transactionValidation.remove, request)
-
+const remove = async (id, user) => {
   // 1. Check transaction
   const transaction = await Transaction.findOne({ _id: id, user })
   if (!transaction) {
@@ -374,10 +364,7 @@ const remove = async (request, user) => {
 }
 
 const getAll = async (request, user) => {
-  const { type, category, sort, startDate, endDate, page } = validation(
-    transactionValidation.getAll,
-    request
-  )
+  const { type, category, sort, startDate, endDate, page } = request
 
   const limit = 10
   const skip = (page - 1) * limit

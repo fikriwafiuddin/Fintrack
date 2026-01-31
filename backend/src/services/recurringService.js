@@ -1,5 +1,3 @@
-import recurringValidation from "../validations/recurringValidation.js"
-import validation from "../validations/validation.js"
 import RecurringTransaction from "../models/recurringTransactionModel.js"
 import Transaction from "../models/transactionModel.js"
 import Category from "../models/categoryModel.js"
@@ -207,11 +205,8 @@ const processRecurrings = async (user) => {
   }
 }
 
-const create = async (request, user) => {
-  const { type, amount, category, frequency, startDate, notes } = validation(
-    recurringValidation.create,
-    request,
-  )
+const create = async (data, user) => {
+  const { type, amount, category, frequency, startDate, notes } = data
 
   // Check category exists and belongs to user
   const categoryIsExist = await Category.findOne({ _id: category })
@@ -246,11 +241,8 @@ const create = async (request, user) => {
   return recurring
 }
 
-const update = async (request, user) => {
-  const { id, type, amount, category, frequency, status, notes } = validation(
-    recurringValidation.update,
-    request,
-  )
+const update = async (data, user) => {
+  const { id, type, amount, category, frequency, status, notes } = data
 
   // Check recurring exists
   const recurring = await RecurringTransaction.findOne({ _id: id, user })
@@ -288,9 +280,7 @@ const update = async (request, user) => {
   return recurring
 }
 
-const updateStatus = async (request, user) => {
-  const { id } = validation(recurringValidation.updateStatus, request)
-
+const updateStatus = async (id, user) => {
   const recurring = await RecurringTransaction.findOne({ _id: id, user })
   if (!recurring) {
     throw new ErrorResponse("Recurring transaction not found", 404)
@@ -302,9 +292,7 @@ const updateStatus = async (request, user) => {
   return recurring
 }
 
-const remove = async (request, user) => {
-  const { id } = validation(recurringValidation.remove, request)
-
+const remove = async (id, user) => {
   const recurring = await RecurringTransaction.findOne({ _id: id, user })
   if (!recurring) {
     throw new ErrorResponse("Recurring transaction not found", 404)
@@ -315,7 +303,7 @@ const remove = async (request, user) => {
 }
 
 const getAll = async (request, user) => {
-  const { status } = validation(recurringValidation.getAll, request)
+  const { status } = request
 
   const filter = { user }
   if (status !== "all") {

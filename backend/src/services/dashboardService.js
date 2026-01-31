@@ -1,6 +1,4 @@
 import User from "../models/userModel.js"
-import { z } from "zod"
-import validation from "../validations/validation.js"
 import Transaction from "../models/transactionModel.js"
 import recurringService from "./recurringService.js"
 
@@ -22,15 +20,8 @@ const getBalance = async (user) => {
   return userData.balance
 }
 
-const summaryValidation = z.object({
-  period: z.enum(["today", "week", "month"], {
-    required_error: "Period is required",
-    message: "Period must be either today, week, or month",
-  }),
-})
-
 const getSummary = async (request, user) => {
-  const { period } = validation(summaryValidation, request)
+  const { period } = request
 
   const now = new Date()
   let startDate

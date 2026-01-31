@@ -1,7 +1,5 @@
 import Chat from "../models/chatModel.js"
 import { ai, MODEL_NAME, systemInstruction } from "../utils/ai.js"
-import chatValidation from "../validations/chatValidation.js"
-import validation from "../validations/validation.js"
 
 // const getAll = async (user) => {
 //     const chats =
@@ -19,8 +17,8 @@ const show = async (user) => {
   return chat
 }
 
-const askAI = async (request, user) => {
-  const { message } = validation(chatValidation.askAI, request)
+const askAI = async (data, user) => {
+  const { message } = data
 
   let chat = await Chat.findOne({ user })
   if (!chat) {
