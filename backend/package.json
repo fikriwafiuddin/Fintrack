@@ -5,7 +5,9 @@
   "type": "module",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
@@ -25,5 +27,12 @@
     "morgan": "^1.10.1",
     "winston": "^3.18.3",
     "zod": "^3.25.71"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "4.0.18",
+    "@vitest/ui": "4.0.18",
+    "mongodb-memory-server": "^11.0.1",
+    "supertest": "^7.2.2",
+    "vitest": "^4.0.18"
   }
 }
